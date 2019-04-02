@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Provision {
     internal interface IResource {
-        IEnumerable<DependencyRequirement> DependencyRequirements {get;}
+        List<DependencyRequirement> DependencyRequirements {get;}
         void InjectDependency(string name, IResource value);
         int Order { get; }
         string Name { get; }

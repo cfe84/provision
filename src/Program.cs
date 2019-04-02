@@ -10,10 +10,9 @@ namespace Provision
     {
         static void Main(string[] args)
         {
-            var context = new Context { DefaultLocation = "westus2"};
-            context.Resources.Add(new ResourceGroup(context));
-            context.Resources.Add(new StorageAccount(context, name: "output", accountPostfix: "out"));
-            context.Resources.Add(new StorageAccount(context, "functions", "fun", new string[] { "toto", "titi" }));
+            var file = args[0];
+            var tree = YamlLexer.LoadResourcesFromFile(file);
+            var context = Parser.Parse(tree);
             Injector.Inject(context);
             var generate = new Generate(context);
             Console.WriteLine(generate.BuildString());

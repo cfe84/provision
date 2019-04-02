@@ -19,7 +19,7 @@ az group delete --name ${resourceGroup.ResourceGroupNameVariable} --yes";
         public string GenerateProvisioningScript() 
             => 
 $@"echo ""Creating resource group ${resourceGroup.ResourceGroupNameVariable}""
-az group create --name ${resourceGroup.ResourceGroupNameVariable} --location ${resourceGroup.Location} --query ""properties.provisioningState"" -o tsv";
+az group create --name ${resourceGroup.ResourceGroupNameVariable} --location {resourceGroup.Location} --query ""properties.provisioningState"" -o tsv";
 
         public string GenerateSummary() 
             => $@"echo ""    Resource group name: ${resourceGroup.ResourceGroupNameVariable}""";

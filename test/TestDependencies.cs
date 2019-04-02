@@ -16,10 +16,10 @@ namespace Provision.Test
             var dependedUpon = A.Fake<IResource>();
             var valueName = "aSpecificStorageAccount";
             A.CallTo(() => dependedUpon.Name).Returns(valueName);
-            A.CallTo(() => dependedUpon.DependencyRequirements).Returns(new DependencyRequirement[0]);
+            A.CallTo(() => dependedUpon.DependencyRequirements).Returns(new List<DependencyRequirement>());
             var dependant = A.Fake<IResource>();
             var variableName = "myDependency";
-            A.CallTo(() => dependant.DependencyRequirements).Returns(new DependencyRequirement[]{
+            A.CallTo(() => dependant.DependencyRequirements).Returns(new List<DependencyRequirement>{
                 new DependencyRequirement {Name = variableName, Type = dependedUpon.GetType(), ValueName = valueName }
             });
             context.Resources.Add(dependedUpon);
@@ -40,7 +40,7 @@ namespace Provision.Test
             var dependant = A.Fake<IResource>();
             var variableName1 = "myDependency1";
             var variableName2 = "myDependency2";
-            A.CallTo(() => dependant.DependencyRequirements).Returns(new DependencyRequirement[]{
+            A.CallTo(() => dependant.DependencyRequirements).Returns(new List<DependencyRequirement>{
                 new DependencyRequirement {Name = variableName1, Type = typeof(StorageAccount) },
                 new DependencyRequirement {Name = variableName2, Type = typeof(StorageAccount) },
             });
@@ -59,11 +59,12 @@ namespace Provision.Test
         public void Injector_should_return_existing_dep_as_default() {
             // prepare
             var context = new Provision.Context();
-            var storageAccount = new StorageAccount(context, name: "a non default name");
+            var storageAccount = new StorageAccount(context);
+            storageAccount.Name = "a non default name";
             var dependant = A.Fake<IResource>();
             var variableName1 = "myDependency1";
             var variableName2 = "myDependency2";
-            A.CallTo(() => dependant.DependencyRequirements).Returns(new DependencyRequirement[]{
+            A.CallTo(() => dependant.DependencyRequirements).Returns(new List<DependencyRequirement>{
                 new DependencyRequirement {Name = variableName1, Type = typeof(StorageAccount) },
                 new DependencyRequirement {Name = variableName2, Type = typeof(StorageAccount) },
             });
@@ -107,13 +108,16 @@ namespace Provision.Test
             var dep1 = new DependencyRequirement{Name = "dep1", Type = typeof(StorageAccount), ValueName = "default"};
             var dep2 = new DependencyRequirement{Name = "dep2", Type = typeof(StorageAccount), ValueName = "default"};
             var dep3 = new DependencyRequirement{Name = "dep1", Type = typeof(ResourceGroup), ValueName = "default"};
-            var list = new DependencyRequirement[] { dep1, dep2, dep3 };
+            var dep4 = new DependencyRequirement{Name = "Dep4", Type = typeof(ResourceGroup), ValueName = "default"};
+            var list = new List<DependencyRequirement>{ dep1, dep2, dep3, dep4 };
             // exec
             DependencyUtils.SetDependencyValueName(list, typeof(StorageAccount), "dep1", "newval");
+            DependencyUtils.SetDependencyValueName(list, typeof(ResourceGroup), "DEP4", "newval");
             // assess
             Assert.Equal("newval", dep1.ValueName);
             Assert.Equal("default", dep2.ValueName);
             Assert.Equal("default", dep3.ValueName);    
+            Assert.Equal("newval", dep4.ValueName);    
         }
     }
 }

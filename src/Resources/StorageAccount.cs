@@ -3,33 +3,29 @@ using System.Collections.Generic;
 namespace Provision {
     internal class StorageAccount: IResource {
         
-        public string LocationVariable {get; private set;}
-        public string Name {get; private set;}
-        public string StorageAccountVariableName {get; private set;}
-        public string AccountPostfix { get; private set; }
-        public string ConnectionStringVariableName { get; private set;}
+        public string Location {get; set;}
+        public string Name {get; set;} = "default";
+        private string storageAccountVariableName = null;
+        public string StorageAccountVariableName {
+            get => storageAccountVariableName ?? this.Name.ToUpper() + "_STORAGE_ACCOUNT";
+            set => storageAccountVariableName = value;
+        }
+        public string AccountPostfix { get; set; } = "";
+        public string ConnectionStringVariableName { get => StorageAccountVariableName + "_CONNECTION_STRING"; }
         public ResourceGroup ResourceGroup {get; private set;}
-        public string [] Containers {get; set; }
+        public string [] Containers {get; set; } =  new string[0];
         
-        public StorageAccount(Context context, 
-            string name = "default",
-            string accountPostfix = "", 
-            string[] containers = null)
+        public StorageAccount(Context context)
         {
-            this.AccountPostfix = accountPostfix;
-            this.Name = name;
-            this.StorageAccountVariableName = name.ToUpper() + "_STORAGE_ACCOUNT";
-            this.ConnectionStringVariableName = StorageAccountVariableName + "_CONNECTION_STRING";
-            this.Containers = containers ?? new string[0];
-            this.LocationVariable = context.LocationVariable;
+            this.Location = $"${context.LocationVariable}";
         }
 
         public int Order => 2;
 
-        public IEnumerable<DependencyRequirement> dependencyRequirements = 
+        public List<DependencyRequirement> dependencyRequirements = 
             DependencyUtils.CreateDefaultDependencyRequirementForType(new [] { typeof(ResourceGroup)});
 
-        public IEnumerable<DependencyRequirement> DependencyRequirements => dependencyRequirements;
+        public List<DependencyRequirement> DependencyRequirements => dependencyRequirements;
 
         public void InjectDependency(string name, IResource value)
         {

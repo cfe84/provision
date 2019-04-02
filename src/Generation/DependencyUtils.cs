@@ -4,19 +4,22 @@ using System.Linq;
 
 namespace Provision {
     internal static class DependencyUtils {
-        public static IEnumerable<DependencyRequirement> CreateDefaultDependencyRequirementForType(Type[] types) {
+        public static List<DependencyRequirement> CreateDefaultDependencyRequirementForType(Type[] types) {
             return types.Select(type => 
                 new DependencyRequirement {Name = type.Name, Type = type }
-            );
+            ).ToList();
         }
 
-        public static void SetDependencyValueName(IEnumerable<DependencyRequirement> dependencies, Type type, string name, string valueName) {
+        public static void SetDependencyValueName(List<DependencyRequirement> dependencies, Type type, string name, string valueName) {
             var matching = dependencies
-                .Where(dependency => dependency.Name == name && dependency.Type == type);
+                .Where(dependency => 
+                    dependency.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
+                    && dependency.Type == type);
             if (matching.Count() != 1) {
                 throw new Exception($"No matching dependency {type}:{name}");
             }
-            matching.FirstOrDefault().ValueName = valueName;
+            var match = matching.First();
+            match.ValueName = valueName;
         }
     }
 }
