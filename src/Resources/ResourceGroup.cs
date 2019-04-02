@@ -13,7 +13,6 @@ namespace Provision {
             
         }
 
-        public IResourceGenerator GetGenerator() => new ResourceGroupGenerator(this);
 
         public string Name {get; set;} = "default";
         private string resourceGroupNameVariable = null;

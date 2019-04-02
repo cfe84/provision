@@ -10,7 +10,11 @@ namespace Provision {
             get => storageAccountVariableName ?? this.Name.ToUpper() + "_STORAGE_ACCOUNT";
             set => storageAccountVariableName = value;
         }
-        public string AccountPostfix { get; set; } = "";
+        private string accountPostfix = null;
+        public string AccountPostfix { 
+            get => accountPostfix ?? Name.Substring(0, 3);
+            set => accountPostfix = value; 
+            }
         public string ConnectionStringVariableName { get => StorageAccountVariableName + "_CONNECTION_STRING"; }
         public ResourceGroup ResourceGroup {get; private set;}
         public string [] Containers {get; set; } =  new string[0];
@@ -33,7 +37,5 @@ namespace Provision {
                 this.ResourceGroup = (ResourceGroup)value;
             }
         }
-
-        public IResourceGenerator GetGenerator() => new StorageAccountGenerator(this);
     }
 }

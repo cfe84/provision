@@ -43,7 +43,7 @@ namespace Provision {
                             ((YamlScalarNode)attributeNode.Key).Value, 
                             ((YamlSequenceNode)attributeNode.Value).Children
                                 .Select(listElement => listElement.ToString())
-                                .ToList()
+                                .ToArray()
                             );
                     }
                     else {

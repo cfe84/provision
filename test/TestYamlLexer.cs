@@ -19,7 +19,7 @@ namespace Provision.Test {
             Assert.Single(tree.Resources, resource =>
                 resource.ResourceType == "storageAccount"
                 && resource.StringProperties["resourceGroup"] == "defaultrg"
-                && resource.ListProperties["containers"].Count == 1
+                && resource.ListProperties["containers"].Length == 1
                 && resource.ListProperties["containers"][0] == "testData");        
         }
 

@@ -13,7 +13,7 @@ namespace Provision.Test {
             var storageAccount = new ResourceSpecification {
                 ResourceType = "StorageAccount"
                 };
-            storageAccount.ListProperties.Add("containers", new List<string>{"abc"});
+            storageAccount.ListProperties.Add("containers", new []{"abc"});
             storageAccount.StringProperties.Add("ResourceGroup", "someGroup");
             resources.Add(storageAccount);
             var resourceGroup = new ResourceSpecification {
@@ -43,5 +43,6 @@ namespace Provision.Test {
                 ((ResourceGroup)resource).Location == "otherLocation"
             );
         }
+
     }
 }

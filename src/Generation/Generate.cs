@@ -11,7 +11,7 @@ namespace Provision {
         private List<IResourceGenerator> getGeneratorList() => 
             this.context.Resources
                 .OrderBy(resource => resource.Order)
-                .Select(resource => resource.GetGenerator())
+                .Select(resource => Resolver.GetResourceGenerator(resource))
                 .ToList();
 
         public string BuildString() {

@@ -2,9 +2,8 @@ deployment:
   location: "canadacentral"
   resources:
   - type: "resourceGroup"
-    name: "defaultrg"
-    value: "$NAME"
   - type: "storageAccount"
-    resourceGroup: "defaultrg"
     containers:
     - "testData"
+  - type: "storageAccount"
+    name: "output"
