@@ -1,0 +1,15 @@
+{
+    "location": "canadacentral",
+    "resourceGroup":
+        {
+            "name": "default",
+            "value": "$NAME"
+        },
+    "storageAccount1": {
+        "resourceGroup": "default",
+        "containers": ["test"]
+    },
+    "storageAccount": {
+
+    }
+}
