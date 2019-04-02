@@ -10,8 +10,13 @@ namespace Provision
     {
         static void Main(string[] args)
         {
-            var file = args[0];
-            var tree = YamlLexer.LoadResourcesFromFile(file);
+            ResourceTree tree;
+            if (args[0] == "-f") {
+                var file = args[1];
+                tree = YamlLexer.LoadResourcesFromFile(file);
+            } else {
+                tree = CommandLineLexer.LexCommandLine(args);
+            }
             var context = Parser.Parse(tree);
             Injector.Inject(context);
             var generate = new Generate(context);
