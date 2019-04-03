@@ -13,12 +13,12 @@ namespace Provision {
         }
         private string hostNameVariable = null;
         public string HostNameVariable {
-            get => hostNameVariable ?? this.Name.ToUpper() + "_HOSTNAME";
+            get => hostNameVariable ?? this.WebAppVariableName.ToUpper() + "_HOSTNAME";
             set => hostNameVariable = value;
         }
         private string gitUrlVariable = null;
         public string GitUrlVariable {
-            get => gitUrlVariable ?? this.Name.ToUpper() + "_GIT_URL";
+            get => gitUrlVariable ?? this.WebAppVariableName.ToUpper() + "_GIT_URL";
             set => gitUrlVariable = value;
         }
         public string Deploy {get; set;} = "false";

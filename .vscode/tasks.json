@@ -32,6 +32,22 @@
             "problemMatcher": "$tsc"
         },
         {
+            "label": "publish-ubuntu",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/src/Provision.csproj",
+                "-c",
+                "release",
+                "-r",
+                "ubuntu.16.10-x64",
+                "-o",
+                "bin/dist/ubuntu"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
             "label": "watch",
             "command": "dotnet",
             "type": "process",

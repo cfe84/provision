@@ -18,25 +18,22 @@ namespace Provision {
         private string GenerateDeploy() =>
             webApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ? 
             $@"echo ""Deploying webapp""
-{webApp.GitUrlVariable}=""https://$DEPLOYMENTUSERNAME:$DEPLOYMENTPASSWORD@${webApp.WebAppVariableName}.scm.azurewebsites.net/${webApp.WebAppVariableName}.git""
 git remote add azure ""${webApp.GitUrlVariable}""
 git push azure master
 """ : "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating webapp ${webApp.WebAppVariableName}""
 {webApp.HostNameVariable}=`az webapp create -g ${webApp.ResourceGroup.ResourceGroupNameVariable} -n ${webApp.WebAppVariableName} --plan ${webApp.AppServicePlan.AppServicePlanAccountVariableName} --deployment-local-git --query ""defaultHostName"" -o tsv`
+{webApp.GitUrlVariable}=""https://$DEPLOYMENTUSERNAME:$DEPLOYMENTPASSWORD@${webApp.WebAppVariableName}.scm.azurewebsites.net/${webApp.WebAppVariableName}.git""
 " 
 + GenerateSettings()
 + GenerateDeploy();
 
         public string GenerateResourceNameDeclaration() => $@"{webApp.WebAppVariableName}=""{webApp.WebAppName}""";
-        private string GenerateDeploySummary() => 
-            webApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?
-                $@"echo ""         Webapp Git URL: ${webApp.GitUrlVariable}""
-" : "";
         public string GenerateSummary() => $@"echo ""            Webapp Name: ${webApp.WebAppVariableName}""
 echo ""             Webapp URL: https://${webApp.HostNameVariable}""
-" + GenerateDeploySummary();
+echo ""         Webapp Git URL: ${webApp.GitUrlVariable}""
+";
 
 
     }
