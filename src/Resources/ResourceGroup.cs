@@ -7,13 +7,6 @@ namespace Provision {
             this.Location = $"${context.LocationVariable}";
             this.ResourceGroupName = "$" + context.BaseNameVariable;
         }
-
-        public void InjectDependency(string name, IResource value)
-        {
-            
-        }
-
-
         public string Name {get; set;} = "default";
         private string resourceGroupNameVariable = null;
         public string ResourceGroupNameVariable {get => resourceGroupNameVariable ?? Name.ToUpper() + "_RESOURCE_GROUP"; }

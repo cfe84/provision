@@ -13,23 +13,18 @@ namespace Provision.Test
         {
             // prepare
             var context = new Provision.Context();
-            var dependedUpon = A.Fake<IResource>();
-            var valueName = "aSpecificStorageAccount";
-            A.CallTo(() => dependedUpon.Name).Returns(valueName);
-            A.CallTo(() => dependedUpon.DependencyRequirements).Returns(new List<DependencyRequirement>());
-            var dependant = A.Fake<IResource>();
-            var variableName = "myDependency";
-            A.CallTo(() => dependant.DependencyRequirements).Returns(new List<DependencyRequirement>{
-                new DependencyRequirement {Name = variableName, Type = dependedUpon.GetType(), ValueName = valueName }
-            });
+            // since we're relying on a lot of Reflection trickery, we
+            // can't inject anymore. This is very sad, and maybe we should
+            // do otherwise 
+            var dependedUpon = new ResourceGroup(context);
+            var dependant = new StorageAccount(context);
             context.Resources.Add(dependedUpon);
             context.Resources.Add(dependant);
-
             // execute
             Injector.Inject(context);
 
             // assess
-            A.CallTo(() => dependant.InjectDependency(variableName, dependedUpon)).MustHaveHappenedOnceExactly();
+            Assert.Equal(dependedUpon, dependant.ResourceGroup);
         }
 
         [Fact]
@@ -37,47 +32,36 @@ namespace Provision.Test
         {
             // prepare
             var context = new Provision.Context();
-            var dependant = A.Fake<IResource>();
-            var variableName1 = "myDependency1";
-            var variableName2 = "myDependency2";
-            A.CallTo(() => dependant.DependencyRequirements).Returns(new List<DependencyRequirement>{
-                new DependencyRequirement {Name = variableName1, Type = typeof(StorageAccount) },
-                new DependencyRequirement {Name = variableName2, Type = typeof(StorageAccount) },
-            });
-            context.Resources.Add(dependant);
+            var dependant1 = new StorageAccount(context);
+            var dependant2 = new StorageAccount(context);
+            context.Resources.Add(dependant1);
+            context.Resources.Add(dependant2);
 
             // execute
             Injector.Inject(context);
 
             // assess
-            A.CallTo(() => dependant.InjectDependency(variableName1, A<StorageAccount>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => dependant.InjectDependency(variableName2, A<StorageAccount>.Ignored)).MustHaveHappenedOnceExactly();
-            Assert.Single(context.Resources, resource => resource.GetType() == typeof(StorageAccount));
+            Assert.Single(context.Resources, resource => resource.GetType() == typeof(ResourceGroup));
+            Assert.NotNull(dependant1.ResourceGroup);
+            Assert.Equal(dependant1.ResourceGroup, dependant2.ResourceGroup);
         }
         
         [Fact]
         public void Injector_should_return_existing_dep_as_default() {
             // prepare
             var context = new Provision.Context();
-            var storageAccount = new StorageAccount(context);
-            storageAccount.Name = "a non default name";
-            var dependant = A.Fake<IResource>();
-            var variableName1 = "myDependency1";
-            var variableName2 = "myDependency2";
-            A.CallTo(() => dependant.DependencyRequirements).Returns(new List<DependencyRequirement>{
-                new DependencyRequirement {Name = variableName1, Type = typeof(StorageAccount) },
-                new DependencyRequirement {Name = variableName2, Type = typeof(StorageAccount) },
-            });
+            var resourceGroup = new ResourceGroup(context);
+            resourceGroup.Name = "a non default name";
+            var dependant = new StorageAccount(context);
             context.Resources.Add(dependant);
-            context.Resources.Add(storageAccount);
+            context.Resources.Add(resourceGroup);
 
             // execute
             Injector.Inject(context);
 
             // assess
-            A.CallTo(() => dependant.InjectDependency(variableName1, storageAccount)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => dependant.InjectDependency(variableName2, storageAccount)).MustHaveHappenedOnceExactly();
-            Assert.Single(context.Resources, resource => resource.GetType() == typeof(StorageAccount));
+            Assert.Single(context.Resources, resource => resource.GetType() == typeof(ResourceGroup));
+            Assert.Equal(resourceGroup, dependant.ResourceGroup);
         }
 
         [Fact]

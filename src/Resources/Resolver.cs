@@ -9,7 +9,9 @@ namespace Provision {
     static class Resolver {
         private static Dictionary<Type, IReference> KnownTypes = new Dictionary<Type, IReference> {
             [typeof(StorageAccount)] = new StorageAccountReference(),
-            [typeof(ResourceGroup)] = new ResourceGroupReference()
+            [typeof(ResourceGroup)] = new ResourceGroupReference(),
+            [typeof(AppServicePlan)] = new AppServicePlanReference(),
+            [typeof(WebApp)] = new WebAppReference(),
         };
 
         public static IReference GetReference(Type resourceType) {

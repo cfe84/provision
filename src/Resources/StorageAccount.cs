@@ -16,7 +16,7 @@ namespace Provision {
             set => accountPostfix = value; 
             }
         public string ConnectionStringVariableName { get => StorageAccountVariableName + "_CONNECTION_STRING"; }
-        public ResourceGroup ResourceGroup {get; private set;}
+        public ResourceGroup ResourceGroup {get; set;}
         public string [] Containers {get; set; } =  new string[0];
         
         public StorageAccount(Context context)
@@ -30,12 +30,5 @@ namespace Provision {
             DependencyUtils.CreateDefaultDependencyRequirementForType(new [] { typeof(ResourceGroup)});
 
         public List<DependencyRequirement> DependencyRequirements => dependencyRequirements;
-
-        public void InjectDependency(string name, IResource value)
-        {
-            if (value.GetType() == typeof(ResourceGroup)) {
-                this.ResourceGroup = (ResourceGroup)value;
-            }
-        }
     }
 }
