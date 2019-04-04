@@ -8,7 +8,7 @@ namespace Provision {
         public TypeProvisioningException(string message): base(message) {}
     }
     static class Resolver {
-        private static Dictionary<Type, IReference> findResourceTypes() {
+        private static Dictionary<Type, IReference> discoverResourceTypes() {
             var assembly = Assembly.GetExecutingAssembly();
             Func<Type, bool> isAResourceGenerator = (Type t) => 
                 t.GetInterfaces().Any(interf => interf == typeof(IResourceGenerator));
@@ -29,7 +29,7 @@ namespace Provision {
                 .ToDictionary(kv => kv.Key, kv => (IReference)new GenericReference(kv.Key, kv.Value));
         }
 
-        private static Dictionary<Type, IReference> KnownTypes = findResourceTypes();
+        private static Dictionary<Type, IReference> KnownTypes = discoverResourceTypes();
 
         public static IReference GetReference(Type resourceType) {
             if (KnownTypes.ContainsKey(resourceType)) {
