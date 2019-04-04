@@ -8,14 +8,21 @@ namespace Provision {
             this.context = context;
         }
 
-        private List<IResourceGenerator> getGeneratorList() => 
+        private IEnumerable<IResource> getOrderedResources() => 
             this.context.Resources
-                .OrderBy(resource => resource.Order)
+                .OrderBy(resource => resource.Order);
+        private List<IResourceGenerator> getGeneratorList(IEnumerable<IResource> resourceList) => 
+            resourceList
                 .Select(resource => Resolver.GetResourceGenerator(resource))
                 .ToList();
 
+        public string CreateResourceListSummary(IEnumerable<IResource> resourceList) =>
+            string.Join("\n", resourceList.Select(resource => $@"echo ""{resource.GetType().Name} ({resource.Name})"""));
+
         public string BuildString() {
-            var generators = getGeneratorList();
+            var sortedList = getOrderedResources();
+            var generators = getGeneratorList(sortedList);
+            var introduction = BaseDeclarations.Introduction(CreateResourceListSummary(sortedList));
             var declarations = string.Join("\n", generators
                 .Select(generator => generator.GenerateResourceNameDeclaration()));
             var cleanupScripts = string.Join("\n", generators
@@ -26,10 +33,13 @@ namespace Provision {
                 .Select(generator => generator.GenerateSummary()));
             var result = BaseDeclarations.Header(this.context)
                 + "\n"
+                + introduction
+                + "\n"
                 + declarations
-                + BaseDeclarations.CleanupScript(cleanupScripts)
                 + "\n"
                 + provisioningScripts
+                + "\n"
+                + BaseDeclarations.CleanupScript(cleanupScripts)
                 + "\n"
                 + summaries;
             return result.Replace("\r", "");

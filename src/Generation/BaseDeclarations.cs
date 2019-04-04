@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+
 namespace Provision {
     static class BaseDeclarations {
         public static string Header(Context values) =>
@@ -48,5 +51,10 @@ echo ""#!/bin/bash
 "" > cleanup.sh
 chmod +x cleanup.sh
         ";
+
+        public static string Introduction(string resourceList) => $@"
+echo ""This will provision the following resources: ""
+{resourceList}
+";
     }
 }

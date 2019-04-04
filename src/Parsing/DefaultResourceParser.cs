@@ -3,14 +3,25 @@ using System.Linq;
 using System.Reflection;
 
 namespace Provision {
-    class DefaultResourceParser<T> : IResourceParser where T: IResource
+    class DefaultResourceParser<T>: IResourceParser where T: IResource
     {
-        Type type = typeof(T);
-        PropertyInfo[] properties = (typeof(T)).GetProperties();
+        private IResourceParser parser = new DefaultResourceParser(typeof(T));
+        public IResource ParseResourceSpecification(Context context, ResourceSpecification specification)
+            => parser.ParseResourceSpecification(context, specification);
+    }
+    class DefaultResourceParser : IResourceParser
+    {
+        public DefaultResourceParser(Type t)
+        {
+            type = t;
+            properties = type.GetProperties();
+        }
+        Type type;
+        PropertyInfo[] properties;
 
         public IResource ParseResourceSpecification(Context context, ResourceSpecification resourceSpecification)
         {
-            T result = InstantiateObject(context);
+            IResource result = InstantiateObject(context);
             var properties = type.GetProperties();
             ProcessStringProperties(resourceSpecification, result);
             ProcessListProperties(resourceSpecification, result);
@@ -25,14 +36,14 @@ namespace Provision {
                                     p.PropertyType == type);
         }
 
-        private void ProcessListProperties(ResourceSpecification resourceSpecification, T result)
+        private void ProcessListProperties(ResourceSpecification resourceSpecification, IResource resultResource)
         {
             foreach (var kv in resourceSpecification.ListProperties)
             {
                 var property = FindMatchingProperty(kv.Key, typeof(string[]));
                 if (property != null)
                 {
-                    property.SetValue(result, kv.Value);
+                    property.SetValue(resultResource, kv.Value);
                 }
                 else
                 {
@@ -42,21 +53,21 @@ namespace Provision {
         }
 
 
-        private void ProcessStringProperties(ResourceSpecification resourceSpecification, T result)
+        private void ProcessStringProperties(ResourceSpecification resourceSpecification, IResource resultResource)
         {
             foreach (var kv in resourceSpecification.StringProperties)
             {
                 PropertyInfo property = FindMatchingProperty(kv.Key, typeof(string));
-                var dependency = result.DependencyRequirements.FirstOrDefault(
+                var dependency = resultResource.DependencyRequirements.FirstOrDefault(
                     d => d.Name.Equals(kv.Key, StringComparison.InvariantCultureIgnoreCase));
                 if (property != null)
                 {
-                    property.SetValue(result, kv.Value);
+                    property.SetValue(resultResource, kv.Value);
                 }
                 else if (dependency != null)
                 {
                     DependencyUtils.SetDependencyValueName(
-                        result.DependencyRequirements,
+                        resultResource.DependencyRequirements,
                         dependency.Type,
                         dependency.Name,
                         kv.Value);
@@ -69,10 +80,10 @@ namespace Provision {
         }
 
 
-        private T InstantiateObject(Context context)
+        private IResource InstantiateObject(Context context)
         {
             var constructor = type.GetConstructor(new[] { typeof(Context) });
-            T result = (T)constructor.Invoke(new object[] { context });
+            IResource result = (IResource)constructor.Invoke(new object[] { context });
             return result;
         }
     }
