@@ -31,7 +31,7 @@ Then add `~/lib/provision` to your path.
 
 # How to use it?
 
-The tool doesn't support all kinds of resources yet. To know those supported, go to the `src/Resources` folder.
+The tool doesn't support all kinds of resources yet. To know those supported, type `provision -h`.
 
 
 # Why CLI and not ARM templates, Terraform or such tools?

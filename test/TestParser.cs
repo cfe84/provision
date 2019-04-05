@@ -28,15 +28,17 @@ namespace Provision.Test {
 
             // Assess
             Assert.Equal(tree.Location, context.DefaultLocation);
-            Assert.Single(context.Resources, resource => 
+            var parsedStorageAccount = context.Resources.FirstOrDefault(resource => 
                 resource.GetType() == typeof(StorageAccount) &&
                 ((StorageAccount)resource).Containers.Length == 1 &&
-                ((StorageAccount)resource).Containers[0] == "abc" &&
-                ((StorageAccount)resource).DependencyRequirements.Any(
-                    req => req.Type == typeof(ResourceGroup) && 
-                    req.Name == "ResourceGroup" && 
-                    req.ValueName == "someGroup")
-            );
+                ((StorageAccount)resource).Containers[0] == "abc");
+            Assert.NotNull(parsedStorageAccount);
+
+            Assert.Single(context.ExplicitDependencyRequirements[parsedStorageAccount],
+                req => 
+                    req.Property.PropertyType == typeof(ResourceGroup) && 
+                    req.Property.Name == "ResourceGroup" && 
+                    req.ValueName == "someGroup");
             
             Assert.Single(context.Resources, resource => 
                 resource.GetType() == typeof(ResourceGroup) &&

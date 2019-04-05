@@ -48,14 +48,6 @@ namespace Provision {
             }
         }
 
-        private static DependencyAttribute getDependencyAttribute(PropertyInfo property) =>
-            (DependencyAttribute)Attribute.GetCustomAttribute(property, typeof(DependencyAttribute));
-
-
-        private static bool propertyIsResource(PropertyInfo property) =>
-            property.PropertyType.GetInterfaces().Any(interf => interf == typeof(IResource));
-        private static bool propertiesHasSetter(PropertyInfo property) =>
-            property.SetMethod != null;
 
         private IEnumerable<DependencyRequirement> getResourceDependencyRequirements(IResource resource) {
             var requirements =
@@ -63,10 +55,10 @@ namespace Provision {
                 context.ExplicitDependencyRequirements[resource] :
                 new List<DependencyRequirement>();
             var propertiesWithTypeResourceAndSetters = resource.GetType().GetProperties()
-                .Where(propertyIsResource)
-                .Where(propertiesHasSetter);
+                .Where(DependencyUtils.PropertyIsResource)
+                .Where(DependencyUtils.PropertiesHasSetter);
             foreach(var property in propertiesWithTypeResourceAndSetters) {
-                var dependencyAttribute = getDependencyAttribute(property);
+                var dependencyAttribute = DependencyUtils.GetDependencyAttribute(property);
                 var propertyIsAlreadyInExplicitRequirements = requirements.Any(requirement => requirement.Property.Name == property.Name);
                 var propertyIsAnOptionalDependency = dependencyAttribute != null ? dependencyAttribute.Optional : false;
                 if (!propertyIsAlreadyInExplicitRequirements && 

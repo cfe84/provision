@@ -78,7 +78,7 @@ namespace Provision {
                     if (property.PropertyType == typeof(string)) {
                         property.SetValue(resultResource, kv.Value);
                     }
-                    else if (isAResource(property.PropertyType)) {
+                    else if (DependencyUtils.PropertyIsResource(property)) {
                         yield return new DependencyRequirement() {
                             Property = property,
                             ValueName = kv.Value
