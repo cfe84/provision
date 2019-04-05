@@ -31,10 +31,5 @@ namespace Provision {
         }
 
         public int Order => 4;
-
-        public List<DependencyRequirement> dependencyRequirements = 
-            DependencyUtils.CreateDefaultDependencyRequirementForType(new [] { typeof(AppServicePlan), typeof(ResourceGroup)});
-
-        public List<DependencyRequirement> DependencyRequirements => dependencyRequirements;
     }
 }

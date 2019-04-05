@@ -3,6 +3,11 @@ using System.Collections.Generic;
 namespace Provision {
     internal class KeyVault: IResource {
         
+        public ResourceGroup ResourceGroup {get; set;}
+        
+        [Dependency(Optional = true, Description = "Specify a service principal that will receive permissions to this KeyVault")]
+        public ServicePrincipal ServicePrincipal { get; set; }
+
         public string Location {get; set;}
         public string Name {get; set;} = "default";
         private string keyVaultVariableName = null;
@@ -11,17 +16,6 @@ namespace Provision {
             set => keyVaultVariableName = value;
         }
         public string KeyVaultName { get; set; }
-        public ResourceGroup ResourceGroup {get; set;}
-        public ServicePrincipal ServicePrincipal { get; set; }
-        public string ServicePrincipalName {
-            set {
-                dependencyRequirements.Add(new DependencyRequirement() {
-                    Name = "ServicePrincipal",
-                    Type = typeof(ServicePrincipal),
-                    ValueName = value                    
-                });
-            }
-        }
         public KeyVault(Context context)
         {
             this.Location = $"${context.LocationVariable}";
@@ -29,10 +23,5 @@ namespace Provision {
         }
 
         public int Order => 2;
-
-        public List<DependencyRequirement> dependencyRequirements = 
-            DependencyUtils.CreateDefaultDependencyRequirementForType(new [] { typeof(ResourceGroup)});
-
-        public List<DependencyRequirement> DependencyRequirements => dependencyRequirements;
     }
 }

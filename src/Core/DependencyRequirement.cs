@@ -1,9 +1,10 @@
 using System;
+using System.Reflection;
 
 namespace Provision {
+    // TODO: make an attribute
     internal class DependencyRequirement {
-        public string Name {get;set;}
+        public PropertyInfo Property {get;set;}
         public string ValueName {get;set;} = "default";
-        public Type Type {get; set;}
     }
 }

@@ -18,7 +18,8 @@ namespace Provision
                 tree = CommandLineLexer.LexCommandLine(args);
             }
             var context = Parser.Parse(tree);
-            Injector.Inject(context);
+            var injector = new Injector(context);
+            injector.Inject();
             var generate = new Generate(context);
             Console.WriteLine(generate.BuildString());
         }

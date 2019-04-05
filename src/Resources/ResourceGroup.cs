@@ -13,7 +13,5 @@ namespace Provision {
         public string ResourceGroupName { get; set; }
         public string Location { get; set; }
         public int Order => 1;
-
-        public List<DependencyRequirement> DependencyRequirements => new List<DependencyRequirement>();
     }
 }

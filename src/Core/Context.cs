@@ -7,5 +7,7 @@ namespace Provision {
         public string LocationVariable { get; set; } = "LOCATION";
         public string DefaultLocation {get; set; } = "westus2";
         public List<IResource> Resources {get;} = new List<IResource>();
+        public Dictionary<IResource, List<DependencyRequirement>> ExplicitDependencyRequirements {get;}
+            = new Dictionary<IResource, List<DependencyRequirement>>();
     }
 }

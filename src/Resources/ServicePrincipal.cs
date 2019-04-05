@@ -27,10 +27,5 @@ namespace Provision {
         }
 
         public int Order => 1;
-
-        public List<DependencyRequirement> dependencyRequirements = 
-            new List<DependencyRequirement>();
-
-        public List<DependencyRequirement> DependencyRequirements => dependencyRequirements;
     }
 }
