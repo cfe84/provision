@@ -10,6 +10,7 @@ namespace Provision {
             get => storageAccountVariableName ?? this.Name.ToUpper() + "_STORAGE_ACCOUNT";
             set => storageAccountVariableName = value;
         }
+        public string SKU { get; set; } = "Standard_LRS";
         private string accountPostfix = null;
         public string AccountPostfix { 
             get => accountPostfix ?? Name.Substring(0, 3);
