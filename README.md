@@ -10,13 +10,15 @@ Will generate a script that provisions a Resource Group, a Service Principal nam
 
 # WHY would I do that?
 
-Because of infrastructure automation for ephemeral artifacts.
+To automate provisioning for ephemeral artifacts.
 
-When experimenting with things, doing labs, constructing demos, the tendency is to go quick and dirty and create resource directly on the Azure Portal. This approach is not perennial and as such is hardly repeatable. Demos or example built for other parties (e.g. customers) start by having to provision manually resources in a subscription, which is suboptimal.
+When experimenting with things, doing labs, constructing demos, the tendency is to go quick and dirty and create resource directly in the Azure Portal, then delete and forget about it forever. This approach is not perennial and is hardly repeatable. 
 
-On the other hand writing provisioning scripts, templates or recipes is a tedious and time-consuming task, which explains why it's not the default behavior.
+Moreover, demos or example built for other parties (e.g. customers) need to contain a portion on provisioning. The usual way is to manually deploy resources in a subscription, which is suboptimal.
 
-This is where Provision plays its role: it lowers the friction of creating those script by automating a large portion of it.
+On the other hand writing provisioning scripts, templates or recipes is a tedious and time-consuming task, which explains why it's not the usual default behavior.
+
+This is where Provision plays its role: it lowers the friction of creating those provisioning scripts by automating a large portion of it. The typical use case for Provision is to generate a provisioning script, tweak it a little, and commit the result to source-control. The point being that it can be replayed easily by just executing the script.
 
 # Install
 
