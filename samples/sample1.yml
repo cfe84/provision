@@ -1,0 +1,11 @@
+deployment:
+  location: westus2
+  resources:
+  - type: storageAccount
+    containers:
+    - input
+    - output
+  - type: keyvault
+  - type: webapp
+    settings:
+    - 'CONNECTION_STRING="$DEFAULT_STORAGE_ACCOUNT_CONNECTION_STRING"'

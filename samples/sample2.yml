@@ -1,0 +1,5 @@
+deployment:
+  location: westus
+  resources:
+  - type: storageAccount
+  - type: functionApp
