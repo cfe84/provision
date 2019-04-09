@@ -20,7 +20,7 @@ namespace Provision {
             $@"echo ""Deploying function app ${functionApp.FunctionAppVariableName}""
 echo ""Deploying functionapp""
 func azure functionapp publish ${functionApp.FunctionAppVariableName}
-""" : "";
+" : "";
 
         private string getPlanOptions() =>
         functionApp.AppServicePlan == null 
