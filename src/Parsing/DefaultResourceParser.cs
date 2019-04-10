@@ -56,7 +56,15 @@ namespace Provision {
                 var property = FindMatchingProperty(kv.Key);
                 if (property != null)
                 {
-                    property.SetValue(resultResource, kv.Value);
+                    if (property.PropertyType == typeof(string[])) {
+                        property.SetValue(resultResource, kv.Value);
+                    } 
+                    else if (property.PropertyType == typeof(string)) {
+                        property.SetValue(resultResource, string.Join(" ", kv.Value));
+                    }
+                    else {
+                        throw new ParserException($"In {type.Name}: trying to assign a list to a property of type {property.PropertyType}");
+                    }
                 }
                 else
                 {
@@ -77,6 +85,9 @@ namespace Provision {
                 {
                     if (property.PropertyType == typeof(string)) {
                         property.SetValue(resultResource, kv.Value);
+                    }
+                    else if (property.PropertyType == typeof(string[])) {
+                        property.SetValue(resultResource, new[] { kv.Value });
                     }
                     else if (DependencyUtils.PropertyIsResource(property)) {
                         yield return new DependencyRequirement() {

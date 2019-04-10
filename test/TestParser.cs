@@ -14,7 +14,9 @@ namespace Provision.Test {
                 ResourceType = "StorageAccount"
                 };
             storageAccount.ListProperties.Add("containers", new []{"abc"});
+            storageAccount.StringProperties.Add("queues", "queueName");
             storageAccount.StringProperties.Add("ResourceGroup", "someGroup");
+            storageAccount.ListProperties.Add("name", new string[] { "a", "name"});
             resources.Add(storageAccount);
             var resourceGroup = new ResourceSpecification {
                 ResourceType = "ResourceGroup",
@@ -30,8 +32,12 @@ namespace Provision.Test {
             Assert.Equal(tree.Location, context.DefaultLocation);
             var parsedStorageAccount = context.Resources.FirstOrDefault(resource => 
                 resource.GetType() == typeof(StorageAccount) &&
+                resource.Name == "a name" &&
                 ((StorageAccount)resource).Containers.Length == 1 &&
-                ((StorageAccount)resource).Containers[0] == "abc");
+                ((StorageAccount)resource).Containers[0] == "abc" &&
+                ((StorageAccount)resource).Queues.Length == 1 &&
+                ((StorageAccount)resource).Queues[0] == "queueName"
+                );
             Assert.NotNull(parsedStorageAccount);
 
             Assert.Single(context.ExplicitDependencyRequirements[parsedStorageAccount],
