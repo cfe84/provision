@@ -34,7 +34,7 @@ az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} 
 + GenerateDeploy();
 
         public string GenerateResourceNameDeclaration() => $@"{functionApp.FunctionAppVariableName}=""{functionApp.FunctionAppName}""
-{functionApp.HostNameVariable}=""https://${functionApp.FunctionAppName}.azurewebsites.net""
+{functionApp.HostNameVariable}=""https://${functionApp.FunctionAppVariableName}.azurewebsites.net""
 ";
         public string GenerateSummary() => $@"echo ""          Function Name: ${functionApp.FunctionAppVariableName}""
 echo ""           Function URL: ${functionApp.HostNameVariable}""

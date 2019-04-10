@@ -25,28 +25,30 @@ namespace Provision
                 SourceResourceId = "$" + resourceGroup.ResourceGroupResourceIdVariable;
             }
         }
-        private void setResourceIdForQueue()
+        private void setEndpointForQueue()
         {
-            SourceResourceId = "$" + storageAccount?.StorageAccountResourceIdVariableName + "/queueServices/default/queues/" + Queue;
+            EndpointType = "storagequeue";
+            Endpoint = "\"$" + storageAccount?.StorageAccountResourceIdVariableName + "/queueServices/default/queues/" + Queue + "\"";
         }
         public string Queue { 
             get => queue; 
             set {
                 queue = value;
-                setResourceIdForQueue();
+                setEndpointForQueue();
             } 
         }
         private StorageAccount storageAccount = null;
         private string queue = null;
 
-        [Dependency(Optional = true, Description = "If specified, and a queue name is provided, will use the storage queue as the subscription target.")]
+        [Dependency(Optional = true, Description = "If specified, and a queue name is provided, will "+
+            "use the storage queue as the subscription target endpoint, and set endpoint type to storagequeue.")]
         public StorageAccount StorageAccount
         {
             get => storageAccount;
             set
             {
                 storageAccount = value;
-                setResourceIdForQueue();
+                setEndpointForQueue();
             }
         }
 

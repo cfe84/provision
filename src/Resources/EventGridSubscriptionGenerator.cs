@@ -10,7 +10,8 @@ namespace Provision {
             => $"{eventGridSubscription.EventGridSubscriptionVariableName}=\"{eventGridSubscription.EventGridSubscriptionName}\"";
 
         public string GenerateCleanupScript() 
-            => "";
+            => $@"echo 'Removing eventgrid subscriptions ${eventGridSubscription.EventGridSubscriptionVariableName}'
+az eventgrid event-subscription delete --name ${eventGridSubscription.EventGridSubscriptionVariableName}";
 
         private string generateIncludedEventTypesOption() =>
         eventGridSubscription.IncludedEventTypes != null ? " --included-event-types " + string.Join(" ", eventGridSubscription.IncludedEventTypes) + " " : "";
@@ -18,7 +19,7 @@ namespace Provision {
         public string GenerateProvisioningScript() 
             => 
 $@"echo ""Creating event grid subscription ${eventGridSubscription.EventGridSubscriptionVariableName}""
-az eventgrid event-subscription create --name ${eventGridSubscription.EventGridSubscriptionVariableName} --endpoint {eventGridSubscription.Endpoint} --endpoint-type {eventGridSubscription.EndpointType} --source-resource-id {eventGridSubscription.SourceResourceId}"
+az eventgrid event-subscription create --name ${eventGridSubscription.EventGridSubscriptionVariableName} --endpoint {eventGridSubscription.Endpoint} --endpoint-type {eventGridSubscription.EndpointType} --source-resource-id {eventGridSubscription.SourceResourceId} --query ""provisioningState"" -o tsv"
         + generateIncludedEventTypesOption();
 
         public string GenerateSummary() 
