@@ -29,14 +29,15 @@ func azure functionapp publish ${functionApp.FunctionAppVariableName}
 
         public string GenerateProvisioningScript() => $@"echo ""Creating functionapp ${functionApp.FunctionAppVariableName}""
 az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} {getPlanOptions()} --name ${functionApp.FunctionAppVariableName} --storage-account ${functionApp.StorageAccount.StorageAccountVariableName} --query ""state"" -o tsv
-
 " 
 + GenerateSettings()
 + GenerateDeploy();
 
-        public string GenerateResourceNameDeclaration() => $@"{functionApp.FunctionAppVariableName}=""{functionApp.FunctionAppName}""";
+        public string GenerateResourceNameDeclaration() => $@"{functionApp.FunctionAppVariableName}=""{functionApp.FunctionAppName}""
+{functionApp.HostNameVariable}=""https://${functionApp.FunctionAppName}.azurewebsites.net""
+";
         public string GenerateSummary() => $@"echo ""          Function Name: ${functionApp.FunctionAppVariableName}""
-echo ""           Function URL: https://${functionApp.HostNameVariable}""
+echo ""           Function URL: ${functionApp.HostNameVariable}""
 ";
 
 

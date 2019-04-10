@@ -9,7 +9,8 @@ namespace Provision {
 
         private ResourceGroup resourceGroup;
         
-        public string GenerateResourceNameDeclaration() => $"{resourceGroup.ResourceGroupNameVariable}=\"{resourceGroup.ResourceGroupName}\"";
+        public string GenerateResourceNameDeclaration() => $@"{resourceGroup.ResourceGroupNameVariable}=""{resourceGroup.ResourceGroupName}""
+{resourceGroup.ResourceGroupResourceIdVariable}=""$SUBSCRIPTION_RESOURCE_ID/resourceGroups/${resourceGroup.ResourceGroupNameVariable}""";
 
         public string GenerateCleanupScript() 
             => 

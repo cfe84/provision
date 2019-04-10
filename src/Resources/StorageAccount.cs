@@ -10,6 +10,9 @@ namespace Provision {
             get => storageAccountVariableName ?? this.Name.ToUpper() + "_STORAGE_ACCOUNT";
             set => storageAccountVariableName = value;
         }
+        public string StorageAccountResourceIdVariableName {
+            get => StorageAccountVariableName + "_RESOURCE_ID";
+        }
         public string SKU { get; set; } = "Standard_LRS";
         private string accountPostfix = null;
         public string AccountPostfix { 
@@ -19,6 +22,8 @@ namespace Provision {
         public string ConnectionStringVariableName { get => StorageAccountVariableName + "_CONNECTION_STRING"; }
         public ResourceGroup ResourceGroup {get; set;}
         public string [] Containers {get; set; } =  new string[0];
+        public string [] Queues { get; set; } = new string[0];
+        public string [] Tables { get; set; } = new string [0];
         
         public StorageAccount(Context context)
         {
