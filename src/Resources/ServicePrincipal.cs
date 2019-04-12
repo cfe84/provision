@@ -7,17 +7,17 @@ namespace Provision {
         public string ApplicationName { get; set; } 
         private string applicationIdentifierUriVariable = null;
         public string ApplicationIdentifierUriVariable {
-            get => applicationIdentifierUriVariable ?? this.Name.ToUpper() + "_APPLICATION_IDENTIFIER_URI";
+            get => applicationIdentifierUriVariable ?? this.Name.ToUpper() + "_SERVICE_PRINCIPAL_IDENTIFIER_URI";
             set => applicationIdentifierUriVariable = value;
         }
         private string applicationIdVariable = null;
         public string ApplicationIdVariable {
-            get => applicationIdVariable ?? this.Name.ToUpper() + "_APPLICATION_ID";
+            get => applicationIdVariable ?? this.Name.ToUpper() + "_SERVICE_PRINCIPAL_ID";
             set => applicationIdVariable = value;
         }
         private string passwordVariable = null;
         public string PasswordVariable { 
-            get => passwordVariable ?? this.Name.ToUpper() + "_APPLICATION_PASSWORD";
+            get => passwordVariable ?? this.Name.ToUpper() + "_SERVICE_PRINCIPAL_PASSWORD";
             set => passwordVariable = value; 
         }
         

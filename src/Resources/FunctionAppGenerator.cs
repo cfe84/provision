@@ -27,6 +27,11 @@ func azure functionapp publish ${functionApp.FunctionAppVariableName}
             ? $"--consumption-plan-location ${functionApp.Location}"
             : $"--plan ${functionApp.AppServicePlan.AppServicePlanAccountVariableName}";
 
+        private string GenerateEasyAuth() =>
+            functionApp.AppRegistration != null ?
+            $@"az webapp auth update --ids ${functionApp.ResourceGroup.ResourceGroupResourceIdVariable}/providers/Microsoft.Web/sites/${functionApp.FunctionAppVariableName} --action LoginWithAzureActiveDirectory --enabled true --aad-client-id ${functionApp.AppRegistration.ApplicationIdVariable} --aad-client-secret ""${functionApp.AppRegistration.PasswordVariable}"" --aad-token-issuer-url https://login.microsoftonline.com/{functionApp.TenantId}/  > /dev/null"
+            : "";
+
         public string GenerateProvisioningScript() => $@"echo ""Creating functionapp ${functionApp.FunctionAppVariableName}""
 az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} {getPlanOptions()} --name ${functionApp.FunctionAppVariableName} --storage-account ${functionApp.StorageAccount.StorageAccountVariableName} --query ""state"" -o tsv
 " 

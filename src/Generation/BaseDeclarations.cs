@@ -40,9 +40,9 @@ done
 
 RANDOMBASE=""`random 5`""
 STORAGEBASENAME=""`echo -n $NAME | head -c 15`$RANDOMBASE""
-SUBSCRIPTIONID=""`az account show --query id -o tsv`""
+{values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
 SUBSCRIPTION_RESOURCE_ID=""/subscriptions/$SUBSCRIPTIONID""
-
+{values.TenantIdVariable}=`az  account show --query tenantId -o tsv`
 ";
 
         public static string CleanupScript(string scripts) => $@"

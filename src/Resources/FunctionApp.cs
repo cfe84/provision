@@ -24,11 +24,15 @@ namespace Provision {
         [Dependency(Optional = false, Description = "Storage account used for functions inners")]
         public StorageAccount StorageAccount {get; set;}
         public string OsType {get; set;} = "Windows";
+        public string TenantId {get ;set;}
+        [Dependency(Optional=true, Description="If specified, will use this registration for easyauth")]
+        public AppRegistration AppRegistration { get ; set; }
         
         public FunctionApp(Context context)
         {
             Location = $"{context.LocationVariable}";
             FunctionAppName = $"${context.BaseNameVariable}-`random 5`";
+            TenantId = $"${context.TenantIdVariable}";
         }
 
         public int Order => 4;
