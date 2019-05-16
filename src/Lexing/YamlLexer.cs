@@ -5,7 +5,7 @@ using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace Provision {
-    class YamlLexingException: Exception {
+    class YamlLexingException: FunctionalException {
         public YamlLexingException(string message): base(message){}
     }
     internal static class YamlLexer {

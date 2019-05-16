@@ -34,23 +34,36 @@ namespace Provision
 
         static void Main(string[] args)
         {
-            ResourceTree tree;
-            if (args[0] == "-h") {
-                Usage(System.AppDomain.CurrentDomain.FriendlyName);
-                return;
-            } 
-            else if (args[0] == "-f") {
-                var file = args[1];
-                tree = YamlLexer.LoadResourcesFromFile(file);
+            try {
+                ResourceTree tree;
+                if (args[0] == "-h") {
+                    Usage(System.AppDomain.CurrentDomain.FriendlyName);
+                    return;
+                } 
+                else if (args[0] == "-f") {
+                    var file = args[1];
+                    tree = YamlLexer.LoadResourcesFromFile(file);
+                }
+                else {
+                    tree = CommandLineLexer.LexCommandLine(args);
+                }
+                var context = Parser.Parse(tree);
+                var injector = new Injector(context);
+                injector.Inject();
+                var generate = new Generate(context);
+                Console.WriteLine(generate.BuildString());
             }
-            else {
-                tree = CommandLineLexer.LexCommandLine(args);
+            catch (Exception exception) {
+                if (exception.GetType().IsSubclassOf(typeof(FunctionalException))) {
+                    Console.Error.WriteLine($"{exception.GetType().Name}: {exception.Message}");
+                } 
+                else if (exception.InnerException != null && exception.InnerException.GetType().IsSubclassOf(typeof(FunctionalException))) {
+                    Console.Error.WriteLine($"{exception.InnerException.GetType().Name}: {exception.InnerException.Message}");
+                }
+                else {
+                    throw exception;
+                }
             }
-            var context = Parser.Parse(tree);
-            var injector = new Injector(context);
-            injector.Inject();
-            var generate = new Generate(context);
-            Console.WriteLine(generate.BuildString());
         }
     }
 }

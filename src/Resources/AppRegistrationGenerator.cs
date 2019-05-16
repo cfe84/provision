@@ -7,6 +7,9 @@ namespace Provision {
         private AppRegistration appRegistration;
         public AppRegistrationGenerator(AppRegistration appRegistration) {
             this.appRegistration = appRegistration;
+            if (appRegistration.ReplyUrl == null) {
+                throw new GenerationException("App registration doesn't have a reply url. Either specify one or add a function app or webapp");
+            }
         }
 
         public string GenerateCleanupScript() => $@"echo 'Removing app registration ${appRegistration.ApplicationIdentifierUriVariable}'

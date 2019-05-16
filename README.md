@@ -178,3 +178,12 @@ echo "      Storage key (def): $DEFAULT_STORAGE_ACCOUNT_CONNECTION_STRING"
 echo "          Function Name: $DEFAULT_FUNCTIONAPP"
 echo "           Function URL: https://$DEFAULT_FUNCTIONAPP_HOSTNAME"
 ```
+
+# How to add a resource
+
+The recommended approach is:
+
+1. Create the resource in a provision.sh script. This helps identifying what is useful to be parameterized
+2. Make it generic
+3. Add as many default values as possible to keep the tool in its spirit of simplicity
+4. Add a resource configuration and a resource generator.

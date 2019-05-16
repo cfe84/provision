@@ -3,7 +3,15 @@ namespace Provision {
     {
         public string Name { get; set; } = "default";
         public string ApplicationName { get; set; }
-        public string IdentifierUri => "https://" + ApplicationName;
+        private string identifierUi;
+        public string IdentifierUri
+        {
+            get => identifierUi ?? "https://" + ApplicationName + ".azurewebsites.net/"; 
+            set {
+                identifierUi = value;
+            }
+        }
+
         private string applicationIdentifierUriVariable = null;
         public string ApplicationIdentifierUriVariable
         {
@@ -35,6 +43,8 @@ namespace Provision {
             get => functionApp; 
             set {
                 functionApp = value; 
+                // if (identifierUi == null)
+                // IdentifierUri = $"${functionApp.HostNameVariable}/";
                 ReplyUrl = $"${functionApp.HostNameVariable}/.auth/login/aad/callback";
             }
         }
@@ -45,13 +55,15 @@ namespace Provision {
             get => webApp; 
             set {
                 webApp = value;
+                // if (identifierUi == null)
+                // IdentifierUri = $"${webApp.HostNameVariable}/";
                 ReplyUrl = $"${webApp.HostNameVariable}/.auth/login/aad/callback";
             }
         }
 
         public AppRegistration(Context context)
         {
-            ApplicationName = $"${context.BaseNameVariable}-`random 5`";
+            ApplicationName = $"${context.BaseNameVariable}-$RANDOMBASE";
         }
 
         public int Order => 1;

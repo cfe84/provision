@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Provision {
+    class GenerationException: FunctionalException {
+        public GenerationException(string message): base(message) {}
+    }
     class Generate {
         private Context context;
         public Generate(Context context) {

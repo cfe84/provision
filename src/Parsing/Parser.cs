@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Provision {
 
-    public class ParserException: Exception {
+    class ParserException: FunctionalException {
         public ParserException(string message): base(message) {}
     }
 
