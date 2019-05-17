@@ -34,7 +34,7 @@ namespace Provision {
         public WebApp(Context context)
         {
             TenantId = $"${context.TenantIdVariable}";
-            WebAppName = $"${context.BaseNameVariable}-`random 5`";
+            WebAppName = $"${context.BaseNameVariable}-${context.Random5charBaseVariable}";
         }
 
         public int Order => 4;

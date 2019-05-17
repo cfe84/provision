@@ -36,7 +36,7 @@ namespace Provision
         {
             try {
                 ResourceTree tree;
-                if (args[0] == "-h") {
+                if (args.Length == 0 || args[0] == "-h") {
                     Usage(System.AppDomain.CurrentDomain.FriendlyName);
                     return;
                 } 
