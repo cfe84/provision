@@ -32,7 +32,7 @@ namespace Provision {
         public BatchAccount(Context context)
         {
             this.Location = $"${context.LocationVariable}";
-            this.BatchAccountName = $"{context.StripAndLowercaseResourceName($"${context.BaseNameVariable}", 19)}${context.Random5charBaseVariable}";
+            this.BatchAccountName = $"{context.StripAndLowercaseResourceName($"${context.BaseNameVariable}-bat-${context.Random5charBaseVariable}", 24)}";
         }
 
         public int Order => 3;

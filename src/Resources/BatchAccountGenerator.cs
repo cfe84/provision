@@ -38,7 +38,7 @@ echo ""{{
     \""metadata\"": [
     ],
     \""startTask\"": {{
-        \""commandLine\"": \""{batchAccount.StartTask}"",
+        \""commandLine\"": \""{batchAccount.StartTask}\"",
         \""maxTaskRetryCount\"": 0,
         \""waitForSuccess\"": true,
         \""userIdentity\"": {{
