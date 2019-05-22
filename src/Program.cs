@@ -23,10 +23,13 @@ namespace Provision
             return leftSpaces + nameAndParameterType + spacesBetweenNameAndDescription + " " + property.Description;
         }
 
+        static string FormatType(Resolver.KnownResourceType type) =>
+            type.Type.Name + (type.Description != null ? ": " + type.Description : "");
+
         static void Usage(string name) {
             var types = Resolver.KnownResourceTypes;
             var usage = string.Join("\n", types.Select(type => 
-                type.Type.Name + "\n" +
+                FormatType(type) + "\n" +
                 string.Join("\n", type.Properties.Select(FormatProperty))
             ));
             Console.WriteLine($"Usage: {name} [Resources to create] [-f file.yml]\n\n\n{usage}\n\n");

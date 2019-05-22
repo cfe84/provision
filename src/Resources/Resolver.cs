@@ -17,6 +17,7 @@ namespace Provision {
 
         public class KnownResourceType {
             public IReference Reference {get; set;}
+            public string Description {get; set;}
             public Type Type {get;set;}
             public IEnumerable<ResourceProperty> Properties {get; set;}
         }
@@ -65,10 +66,14 @@ namespace Provision {
                 .Select(type => eligibleConstructor(type))
                 .ToDictionary(
                     kv => kv.Key,
-                    kv => new KnownResourceType{
-                        Type = kv.Key,
-                        Reference = (IReference)new GenericReference(kv.Key, kv.Value),
-                        Properties = discoverResourceProperties(kv.Key)
+                    kv => {
+                        var resourceAttribute = DependencyUtils.GetResourceAttribute(kv.Key);
+                        return new KnownResourceType{
+                            Type = kv.Key,
+                            Description = resourceAttribute?.Description,
+                            Reference = (IReference)new GenericReference(kv.Key, kv.Value),
+                            Properties = discoverResourceProperties(kv.Key)
+                        };
                     });
         }
 

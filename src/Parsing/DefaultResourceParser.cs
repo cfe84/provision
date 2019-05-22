@@ -86,6 +86,9 @@ namespace Provision {
                     if (property.PropertyType == typeof(string)) {
                         property.SetValue(resultResource, kv.Value);
                     }
+                    else if (property.PropertyType == typeof(Int32) || property.PropertyType == typeof(Int64) || property.PropertyType == typeof(int)) {
+                        property.SetValue(resultResource, int.Parse(kv.Value));
+                    }
                     else if (property.PropertyType == typeof(string[])) {
                         property.SetValue(resultResource, new[] { kv.Value });
                     }

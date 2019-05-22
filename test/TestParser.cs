@@ -51,6 +51,27 @@ namespace Provision.Test {
                 ((ResourceGroup)resource).Location == "otherLocation"
             );
         }
+        [Fact]
+        public void Parser_should_parse_ints() {
+            // Prepare
+            var tree = new ResourceTree();
+            var resources = new List<ResourceSpecification>();
+            var snippet = new ResourceSpecification {
+                ResourceType = "Snippet",
+                };
+            snippet.StringProperties.Add("order", "3");
+            resources.Add(snippet);
+            tree.Resources = resources;
+
+            // Execute
+            var context = Parser.Parse(tree);
+
+            // Assess
+            var parsedSnippet = context.Resources.FirstOrDefault(resource => 
+                resource.GetType() == typeof(Snippet));
+            Assert.NotNull(parsedSnippet);
+            Assert.Equal(3, parsedSnippet.Order);
+        }
 
     }
 }

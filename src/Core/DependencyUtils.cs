@@ -8,6 +8,8 @@ namespace Provision
         
         public static DependencyAttribute GetDependencyAttribute(PropertyInfo property) =>
             (DependencyAttribute)Attribute.GetCustomAttribute(property, typeof(DependencyAttribute));
+        public static ResourceAttribute GetResourceAttribute(Type type) =>
+            (ResourceAttribute)Attribute.GetCustomAttribute(type, typeof(ResourceAttribute));
 
         public static bool PropertyIsResource(PropertyInfo property) =>
             property.PropertyType.GetInterfaces().Any(interf => interf == typeof(IResource));
