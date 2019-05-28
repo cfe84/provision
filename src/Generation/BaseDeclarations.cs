@@ -45,16 +45,16 @@ usage() {{
 
         public static string AssembleEnvFile(Context values) {
             return $@"
-RANDOMBASE=\""`random 5`\""
-{values.SubscriptionIdVariable}=\""`az account show --query id -o tsv`\""
-SUBSCRIPTION_RESOURCE_ID=\""/subscriptions/${values.SubscriptionIdVariable}\""
+RANDOMBASE=""`random 5`""
+{values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
+SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
 
 if [ ! -f env.sh ]; then
     echo ""#!/bin/bash
 
 NAME='`basename ""$PWD""`'
 {values.LocationVariable}=\""{values.DefaultLocation}\""
-RANDOMBASE=\""$RANDOMBASE""
+RANDOMBASE=\""$RANDOMBASE\""
 RANDOMBASE16CHAR=\""`random 16`\""
 STORAGEBASENAME=\""`echo -n $NAME | head -c 15`$RANDOMBASE\""
 {values.SubscriptionIdVariable}=\""${values.SubscriptionIdVariable}\""
