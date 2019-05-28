@@ -29,15 +29,22 @@ func azure functionapp publish ${functionApp.FunctionAppVariableName}" : "";
         private string GenerateEasyAuth() =>
             functionApp.AppRegistration != null ?
             $@"
-echo ""
-Configuring easy auth for functionapp ${functionApp.FunctionAppVariableName}""
+echo ""Configuring easy auth for functionapp ${functionApp.FunctionAppVariableName}""
 az webapp auth update --ids ${functionApp.ResourceGroup.ResourceGroupResourceIdVariable}/providers/Microsoft.Web/sites/${functionApp.FunctionAppVariableName} --action LoginWithAzureActiveDirectory --enabled true --aad-client-id ${functionApp.AppRegistration.ApplicationIdVariable} --aad-client-secret ""${functionApp.AppRegistration.PasswordVariable}"" --aad-token-issuer-url https://login.microsoftonline.com/{functionApp.TenantId}/  > /dev/null"
+            : "";
+
+        private string GenerateIdentity() =>
+            functionApp.IdentityScope != null ?
+            $@"
+echo ""Configuring identity for functionapp ${functionApp.FunctionAppVariableName} with {functionApp.IdentityRole} access to scope {functionApp.IdentityScope}. Principal id:""
+az functionapp identity assign --name ${functionApp.FunctionAppVariableName} --resource-group ${functionApp.ResourceGroup.ResourceGroupNameVariable} --role {functionApp.IdentityRole} --scope ""{functionApp.IdentityScope}"" --query principalId -o tsv" 
             : "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating functionapp ${functionApp.FunctionAppVariableName}""
 az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} {getPlanOptions()} --name ${functionApp.FunctionAppVariableName} --storage-account ${functionApp.StorageAccount.StorageAccountVariableName} --query ""state"" -o tsv" 
 + GenerateSettings()
 + GenerateEasyAuth()
++ GenerateIdentity()
 + GenerateDeploy();
 
         public string GenerateResourceNameDeclaration() => $@"{functionApp.FunctionAppVariableName}=""{functionApp.FunctionAppName}""

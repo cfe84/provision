@@ -26,7 +26,7 @@ echo ""[{{
 {appRegistration.ApplicationIdVariable}=`az ad app create --identifier-uris ${appRegistration.ApplicationIdentifierUriVariable} --available-to-other-tenants {appRegistration.AvailableToOtherTenants} --reply-urls {appRegistration.ReplyUrl} --display-name {appRegistration.ApplicationIdentifierUriVariable} --password ""${appRegistration.PasswordVariable}"" --required-resource-access app-registration-manifest.tmp.json --query ""appId"" -o tsv`";
         public string GenerateResourceNameDeclaration() => 
             $@"{appRegistration.ApplicationIdentifierUriVariable}=""{appRegistration.IdentifierUri}""
-{appRegistration.PasswordVariable}=""@`random 16`!#123001""";
+{appRegistration.PasswordVariable}=""@$RANDOMBASE16CHAR!@123001""";
 
         public string GenerateSummary() => $@"echo ""                 App id: ${appRegistration.ApplicationIdVariable}""
 echo ""                App URI: ${appRegistration.ApplicationIdentifierUriVariable}""

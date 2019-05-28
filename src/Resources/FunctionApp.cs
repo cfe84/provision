@@ -27,11 +27,15 @@ namespace Provision {
         public string TenantId {get ;set;}
         [Dependency(Optional=true, Description="If specified, will use this registration for easyauth")]
         public AppRegistration AppRegistration { get ; set; }
-        
+        [Dependency(Optional=true, Description="If specified, will define a Managed Service Identity for the function to this scope. Default role is contributor")]
+        public string IdentityScope {get; set;}
+        [Dependency(Optional=true, Description="If specified, will define a Managed Service Identity for the function with this role. Scope must be defined")]
+        public string IdentityRole {get; set;} = "contributor";
+
         public FunctionApp(Context context)
         {
             Location = $"{context.LocationVariable}";
-            FunctionAppName = $"${context.BaseNameVariable}-`random 5`";
+            FunctionAppName = $"${context.BaseNameVariable}-${context.Random5charBaseVariable}";
             TenantId = $"${context.TenantIdVariable}";
         }
 

@@ -8,6 +8,7 @@ namespace Provision {
         public string DefaultLocation {get; set; } = "westus2";
         public string SubscriptionIdVariable {get; set;} = "SUBSCRIPTIONID";
         public string TenantIdVariable {get; set;} = "TENANTID";
+        public string Random16charBaseVariable {get; set;} = "RANDOMBASE16CHAR";
         public string Random5charBaseVariable {get; set;} = "RANDOMBASE";
         public string StripAndLowercaseResourceName(string baseName, int maxLength) {
             return $"`echo \"{baseName}\" | sed -e 's/-//g' | sed -E 's/^(.*)$/\\L\\1/g' | head -c {maxLength}`";

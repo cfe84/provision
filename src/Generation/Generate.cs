@@ -35,7 +35,8 @@ namespace Provision {
                 .Select(generator => generator.GenerateProvisioningScript()));
             var summaries = string.Join("\n", generators
                 .Select(generator => generator.GenerateSummary()));
-            var result = BaseDeclarations.Header(this.context)
+            var envFileGenerator = BaseDeclarations.AssembleEnvFile(context);
+            var result = BaseDeclarations.Header(this.context, envFileGenerator)
                 + "\n"
                 + introduction
                 + "\n"
