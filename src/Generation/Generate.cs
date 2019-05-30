@@ -28,13 +28,17 @@ namespace Provision {
             var generators = getGeneratorList(sortedList);
             var introduction = BaseDeclarations.Introduction(CreateResourceListSummary(sortedList));
             var declarations = string.Join("\n", generators
-                .Select(generator => generator.GenerateResourceNameDeclaration()));
+                .Select(generator => generator.GenerateResourceNameDeclaration())
+                .Where(script => !String.IsNullOrWhiteSpace(script)));
             var cleanupScripts = string.Join("\n", generators
-                .Select(generator => generator.GenerateCleanupScript()));
+                .Select(generator => generator.GenerateCleanupScript())
+                .Where(script => !String.IsNullOrWhiteSpace(script)));
             var provisioningScripts = string.Join("\n", generators
-                .Select(generator => generator.GenerateProvisioningScript()));
+                .Select(generator => generator.GenerateProvisioningScript())
+                .Where(script => !String.IsNullOrWhiteSpace(script)));
             var summaries = string.Join("\n", generators
-                .Select(generator => generator.GenerateSummary()));
+                .Select(generator => generator.GenerateSummary())
+                .Where(script => !String.IsNullOrWhiteSpace(script)));
             var envFileGenerator = BaseDeclarations.AssembleEnvFile(context);
             var result = BaseDeclarations.Header(this.context, envFileGenerator)
                 + "\n"
