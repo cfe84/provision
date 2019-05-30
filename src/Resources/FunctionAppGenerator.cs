@@ -10,7 +10,11 @@ namespace Provision {
             this.functionApp = functionApp;
         }
 
-        public string GenerateCleanupScript() => "";
+        public string GenerateCleanupScript() => 
+            functionApp.IdentityScope != null ? $@"echo 'Removing function app identity ${functionApp.IdentityRolePrincipalIdVariable}'
+    az ad app delete --id ${functionApp.IdentityRolePrincipalIdVariable}"
+            : "";
+
         private string GenerateSettings() => 
             functionApp.Settings != null ? $@"
 az functionapp config appsettings set --name ${functionApp.FunctionAppVariableName} -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} --settings {string.Join(" ", functionApp.Settings)} > /dev/null"
@@ -37,7 +41,7 @@ az webapp auth update --ids ${functionApp.ResourceGroup.ResourceGroupResourceIdV
             functionApp.IdentityScope != null ?
             $@"
 echo ""Configuring identity for functionapp ${functionApp.FunctionAppVariableName} with {functionApp.IdentityRole} access to scope {functionApp.IdentityScope}. Principal id:""
-az functionapp identity assign --name ${functionApp.FunctionAppVariableName} --resource-group ${functionApp.ResourceGroup.ResourceGroupNameVariable} --role {functionApp.IdentityRole} --scope ""{functionApp.IdentityScope}"" --query principalId -o tsv" 
+{functionApp.IdentityRolePrincipalIdVariable}=`az functionapp identity assign --name ${functionApp.FunctionAppVariableName} --resource-group ${functionApp.ResourceGroup.ResourceGroupNameVariable} --role {functionApp.IdentityRole} --scope ""{functionApp.IdentityScope}"" --query principalId -o tsv`" 
             : "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating functionapp ${functionApp.FunctionAppVariableName}""

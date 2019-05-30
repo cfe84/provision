@@ -31,6 +31,7 @@ namespace Provision {
         public string IdentityScope {get; set;}
         [Dependency(Optional=true, Description="If specified, will define a Managed Service Identity for the function with this role. Scope must be defined")]
         public string IdentityRole {get; set;} = "contributor";
+        public string IdentityRolePrincipalIdVariable => FunctionAppVariableName + "_PRINCIPALID";
 
         public FunctionApp(Context context)
         {
