@@ -48,11 +48,12 @@ usage() {{
 RANDOMBASE=""`random 5`""
 {values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
 SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
+NAME='`basename ""$PWD""`'
 
 if [ ! -f env.sh ]; then
     echo ""#!/bin/bash
 
-NAME='`basename ""$PWD""`'
+NAME='$NAME'
 {values.LocationVariable}=\""{values.DefaultLocation}\""
 RANDOMBASE=\""$RANDOMBASE\""
 RANDOMBASE16CHAR=\""`random 16`\""
