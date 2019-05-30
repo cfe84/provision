@@ -23,7 +23,9 @@ echo ""[{{
         'type': 'Scope'
         }} ]
     }}]"" > app-registration-manifest.tmp.json
-{appRegistration.ApplicationIdVariable}=`az ad app create --identifier-uris ${appRegistration.ApplicationIdentifierUriVariable} --available-to-other-tenants {appRegistration.AvailableToOtherTenants} --reply-urls {appRegistration.ReplyUrl} --display-name {appRegistration.ApplicationIdentifierUriVariable} --password ""${appRegistration.PasswordVariable}"" --required-resource-access app-registration-manifest.tmp.json --query ""appId"" -o tsv`";
+{appRegistration.ApplicationIdVariable}=`az ad app create --identifier-uris ${appRegistration.ApplicationIdentifierUriVariable} --available-to-other-tenants {appRegistration.AvailableToOtherTenants} --reply-urls {appRegistration.ReplyUrl} --display-name {appRegistration.ApplicationIdentifierUriVariable} --password ""${appRegistration.PasswordVariable}"" --required-resource-access app-registration-manifest.tmp.json --query ""appId"" -o tsv`
+rm app-registration-manifest.tmp.json";
+
         public string GenerateResourceNameDeclaration() => 
             $@"{appRegistration.ApplicationIdentifierUriVariable}=""{appRegistration.IdentifierUri}""
 {appRegistration.PasswordVariable}=""@$RANDOMBASE16CHAR!@123001""";
