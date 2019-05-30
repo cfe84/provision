@@ -40,7 +40,7 @@ az webapp auth update --ids ${functionApp.ResourceGroup.ResourceGroupResourceIdV
         private string GenerateIdentity() =>
             functionApp.IdentityScope != null ?
             $@"
-echo ""Configuring identity for functionapp ${functionApp.FunctionAppVariableName} with {functionApp.IdentityRole} access to scope {functionApp.IdentityScope}. Principal id:""
+echo ""Configuring identity for functionapp ${functionApp.FunctionAppVariableName} with {functionApp.IdentityRole} access to scope {functionApp.IdentityScope}.""
 {functionApp.IdentityRolePrincipalIdVariable}=`az functionapp identity assign --name ${functionApp.FunctionAppVariableName} --resource-group ${functionApp.ResourceGroup.ResourceGroupNameVariable} --role {functionApp.IdentityRole} --scope ""{functionApp.IdentityScope}"" --query principalId -o tsv`" 
             : "";
 
@@ -54,9 +54,15 @@ az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} 
         public string GenerateResourceNameDeclaration() => $@"{functionApp.FunctionAppVariableName}=""{functionApp.FunctionAppName}""
 {functionApp.HostNameVariable}=""https://${functionApp.FunctionAppVariableName}.azurewebsites.net""
 ";
+
+        private string FunctionAppSummaryPrincipal() =>
+            functionApp.IdentityScope != null ? $@"
+echo ""  Function id principal: ${functionApp.IdentityRolePrincipalIdVariable}"""
+            : "";
+
         public string GenerateSummary() => $@"echo ""          Function Name: ${functionApp.FunctionAppVariableName}""
-echo ""           Function URL: ${functionApp.HostNameVariable}""
-";
+echo ""           Function URL: ${functionApp.HostNameVariable}"""
+            + FunctionAppSummaryPrincipal();
 
 
     }
