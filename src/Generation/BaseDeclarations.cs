@@ -48,7 +48,7 @@ usage() {{
 RANDOMBASE=""`random 5`""
 {values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
 SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
-NAME='`basename ""$PWD""`'
+NAME=""`basename ""$PWD""`""
 
 if [ ! -f env.sh ]; then
     echo ""#!/bin/bash
