@@ -24,6 +24,8 @@ namespace Provision {
         public string [] Containers {get; set; } =  new string[0];
         public string [] Queues { get; set; } = new string[0];
         public string [] Tables { get; set; } = new string [0];
+
+        public string CorsMethods { get; set; } = null;
         
         public StorageAccount(Context context)
         {
