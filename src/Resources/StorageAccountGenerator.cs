@@ -12,21 +12,25 @@ namespace Provision {
         public string GenerateCleanupScript() => "";
 
         private string GenerateContainers() => 
-            storageAccount.Containers.Length > 0 ? "\n" : "" + string.Join("\n", 
+            storageAccount.Containers.Length > 0 ? "\n" + string.Join("\n", 
                 storageAccount.Containers.Select((System.Func<string, string>)(
                     containerName => $@"echo ""Creating container ${storageAccount.StorageAccountVariableName}.{containerName}""
-az storage container create --name ""{containerName}"" --account-name ${storageAccount.StorageAccountVariableName} --query ""created"" -o tsv")));
+az storage container create --name ""{containerName}"" --account-name ${storageAccount.StorageAccountVariableName} --query ""created"" -o tsv")))
+                : "" ;
+
         private string GenerateQueues() => 
-            storageAccount.Queues.Length > 0 ? "\n" : "" + string.Join("\n", 
+            storageAccount.Queues.Length > 0 ? "\n" + string.Join("\n", 
                 storageAccount.Queues.Select((System.Func<string, string>)(
                     queueName => $@"echo ""Creating queue ${storageAccount.StorageAccountVariableName}.{queueName}""
-az storage queue create --name ""{queueName}"" --account-name ${storageAccount.StorageAccountVariableName} --query ""created"" -o tsv")));
+az storage queue create --name ""{queueName}"" --account-name ${storageAccount.StorageAccountVariableName} --query ""created"" -o tsv")))
+                : "" ;
 
         private string GenerateTables() => 
-            storageAccount.Tables.Length > 0 ? "\n" : "" + string.Join("\n", 
+            storageAccount.Tables.Length > 0 ? "\n" + string.Join("\n", 
                 storageAccount.Tables.Select((System.Func<string, string>)(
                     tableName => $@"echo ""Creating table ${storageAccount.StorageAccountVariableName}.{tableName}""
-az storage table create --name ""{tableName}"" --account-name ${storageAccount.StorageAccountVariableName} --query ""created"" -o tsv")));
+az storage table create --name ""{tableName}"" --account-name ${storageAccount.StorageAccountVariableName} --query ""created"" -o tsv")))
+            : "" ;
 
         private string GenerateCors() => 
             storageAccount.CorsMethods != null ? $@"
