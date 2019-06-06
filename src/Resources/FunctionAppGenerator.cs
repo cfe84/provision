@@ -12,7 +12,7 @@ namespace Provision {
 
         public string GenerateCleanupScript() => 
             functionApp.IdentityScope != null ? $@"echo 'Removing function app identity ${functionApp.IdentityRolePrincipalIdVariable}'
-    az ad app delete --id ${functionApp.IdentityRolePrincipalIdVariable}"
+# az ad app delete --id ${functionApp.IdentityRolePrincipalIdVariable}"
             : "";
 
         private string GenerateSettings() => 

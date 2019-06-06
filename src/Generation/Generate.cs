@@ -33,7 +33,7 @@ namespace Provision {
             var cleanupScripts = string.Join("\n", generators
                 .Select(generator => generator.GenerateCleanupScript())
                 .Where(script => !String.IsNullOrWhiteSpace(script)));
-            var provisioningScripts = string.Join("\n", generators
+            var provisioningScripts = string.Join("\n\n", generators
                 .Select(generator => generator.GenerateProvisioningScript())
                 .Where(script => !String.IsNullOrWhiteSpace(script)));
             var summaries = string.Join("\n", generators

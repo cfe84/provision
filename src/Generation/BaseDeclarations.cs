@@ -9,6 +9,11 @@ namespace Provision {
 PWD=`pwd`
 random() {{ size=$1; echo -n `date +%s%N | sha256sum | base64 | head -c $size`;}}
 
+RANDOMBASE=""`random 5`""
+{values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
+SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
+NAME=""`basename ""$PWD""`""
+
 while [[ $# -gt 0 ]]
 do
     key=""$1""
@@ -45,10 +50,6 @@ usage() {{
 
         public static string AssembleEnvFile(Context values) {
             return $@"
-RANDOMBASE=""`random 5`""
-{values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
-SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
-NAME=""`basename ""$PWD""`""
 
 if [ ! -f env.sh ]; then
     echo ""#!/bin/bash
