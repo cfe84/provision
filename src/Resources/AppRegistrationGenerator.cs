@@ -15,6 +15,12 @@ namespace Provision {
         public string GenerateCleanupScript() => $@"echo 'Removing app registration ${appRegistration.ApplicationIdentifierUriVariable}'
 az ad app delete --id ${appRegistration.ApplicationIdentifierUriVariable}";
 
+        public string GenerateGroupMembershipClaims() => 
+            appRegistration.GroupMembershipClaims != null 
+            ? $@"
+az ad app update --id ${appRegistration.ApplicationIdentifierUriVariable} --set groupMembershipClaims={appRegistration.GroupMembershipClaims}"
+            : "";
+
         public string GenerateProvisioningScript() => $@"echo ""Creating App Registration ${appRegistration.ApplicationIdentifierUriVariable}""
 echo ""[{{
     'resourceAppId': '00000002-0000-0000-c000-000000000000',
@@ -24,11 +30,11 @@ echo ""[{{
         }} ]
     }}]"" > app-registration-manifest.tmp.json
 {appRegistration.ApplicationIdVariable}=`az ad app create --identifier-uris ${appRegistration.ApplicationIdentifierUriVariable} --available-to-other-tenants {appRegistration.AvailableToOtherTenants} --reply-urls {appRegistration.ReplyUrl} --display-name ${appRegistration.ApplicationIdentifierUriVariable} --password ""${appRegistration.PasswordVariable}"" --required-resource-access app-registration-manifest.tmp.json --query ""appId"" -o tsv`
-rm app-registration-manifest.tmp.json";
+rm app-registration-manifest.tmp.json" + GenerateGroupMembershipClaims();
 
         public string GenerateResourceNameDeclaration() => 
             $@"{appRegistration.ApplicationIdentifierUriVariable}=""{appRegistration.IdentifierUri}""
-{appRegistration.PasswordVariable}=""@$RANDOMBASE16CHAR!@123001""";
+{appRegistration.PasswordVariable}=""@$RANDOMBASE16CHAR^_132001""";
 
         public string GenerateSummary() => $@"echo ""                 App id: ${appRegistration.ApplicationIdVariable}""
 echo ""                App URI: ${appRegistration.ApplicationIdentifierUriVariable}""

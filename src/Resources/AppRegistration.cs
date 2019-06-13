@@ -66,6 +66,8 @@ namespace Provision {
             ApplicationName = $"${context.BaseNameVariable}-$RANDOMBASE";
         }
 
+        public string GroupMembershipClaims {get; set;}
+
         public int Order => 1;
     }
 }
