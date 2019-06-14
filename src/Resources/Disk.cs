@@ -26,6 +26,6 @@ namespace Provision {
             this.DiskName = $"${context.BaseNameVariable}-{Name}";
         }
 
-        public int Order => 2;
+        public int Order {get ; set; } = 2;
     }
 }

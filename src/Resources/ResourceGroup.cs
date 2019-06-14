@@ -13,6 +13,6 @@ namespace Provision {
         public string ResourceGroupResourceIdVariable { get => ResourceGroupNameVariable + "_RESOURCE_ID"; }
         public string ResourceGroupName { get; set; }
         public string Location { get; set; }
-        public int Order => 1;
+        public int Order {get; set;} = 1;
     }
 }

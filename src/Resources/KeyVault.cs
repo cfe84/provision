@@ -22,6 +22,6 @@ namespace Provision {
             this.KeyVaultName = $"`echo ${context.BaseNameVariable} | head -c 19``random 5`";
         }
 
-        public int Order => 2;
+        public int Order {get; set;} = 2;
     }
 }

@@ -10,9 +10,11 @@ PWD=`pwd`
 random() {{ size=$1; echo -n `date +%s%N | sha256sum | base64 | head -c $size`;}}
 
 RANDOMBASE=""`random 5`""
+RANDOMBASE16CHAR=""`random 16`""
 {values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
 SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
 NAME=""`basename ""$PWD""`""
+{values.LocationVariable}=""westus2""
 
 while [[ $# -gt 0 ]]
 do
@@ -50,19 +52,19 @@ usage() {{
 
         public static string AssembleEnvFile(Context values) {
             return $@"
-
-if [ ! -f env.sh ]; then
+ENVFILE=""env-$NAME.sh""
+if [ ! -f $ENVFILE ]; then
     echo ""#!/bin/bash
 
 NAME='$NAME'
-{values.LocationVariable}=\""{values.DefaultLocation}\""
+{values.LocationVariable}=\""$LOCATION\""
 RANDOMBASE=\""$RANDOMBASE\""
-RANDOMBASE16CHAR=\""`random 16`\""
+RANDOMBASE16CHAR=\""$RANDOMBASE16CHAR\""
 STORAGEBASENAME=\""`echo -n $NAME | head -c 15`$RANDOMBASE\""
 {values.SubscriptionIdVariable}=\""${values.SubscriptionIdVariable}\""
 SUBSCRIPTION_RESOURCE_ID=\""$SUBSCRIPTION_RESOURCE_ID\""
 {values.TenantIdVariable}=`az  account show --query tenantId -o tsv`
-"" > env.sh
+"" > $ENVFILE
 fi
 "; 
         }
@@ -71,9 +73,9 @@ fi
 echo ""Generating cleanup script""
 echo ""#!/bin/bash
 {scripts}
-rm env.sh
-"" > cleanup.sh
-chmod +x cleanup.sh
+rm $ENVFILE
+"" > cleanup-$NAME.sh
+chmod +x cleanup-$NAME.sh
         ";
 
         public static string Introduction(string resourceList) => $@"

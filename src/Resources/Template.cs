@@ -12,6 +12,6 @@ namespace Provision {
         {
         }
 
-        public int Order => 10;
+        public int Order {get; set;} = 10;
     }
 }

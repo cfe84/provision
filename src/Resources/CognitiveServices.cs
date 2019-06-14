@@ -31,6 +31,6 @@ namespace Provision {
             CognitiveServicesName = $"${context.BaseNameVariable}-`random 5`";
         }
 
-        public int Order => 3;
+        public int Order {get; set;} = 3;
     }
 }

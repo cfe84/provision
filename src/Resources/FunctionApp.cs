@@ -40,6 +40,6 @@ namespace Provision {
             TenantId = $"${context.TenantIdVariable}";
         }
 
-        public int Order => 4;
+        public int Order {get ;set; } = 4;
     }
 }

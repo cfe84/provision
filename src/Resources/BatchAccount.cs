@@ -35,6 +35,6 @@ namespace Provision {
             this.BatchAccountName = $"{context.StripAndLowercaseResourceName($"${context.BaseNameVariable}-bat-${context.Random5charBaseVariable}", 24)}";
         }
 
-        public int Order => 3;
+        public int Order {get;set;} = 3;
     }
 }

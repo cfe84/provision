@@ -26,6 +26,6 @@ namespace Provision {
             ApplicationName = $"http://${context.BaseNameVariable}/`random 5`";
         }
 
-        public int Order => 1;
+        public int Order {get ;set; } = 1;
     }
 }

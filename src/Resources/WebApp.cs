@@ -37,6 +37,6 @@ namespace Provision {
             WebAppName = $"${context.BaseNameVariable}-${context.Random5charBaseVariable}";
         }
 
-        public int Order => 4;
+        public int Order {get; set;} = 4;
     }
 }

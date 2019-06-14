@@ -68,6 +68,6 @@ namespace Provision {
 
         public string GroupMembershipClaims {get; set;}
 
-        public int Order => 1;
+        public int Order {get; set;} = 1;
     }
 }

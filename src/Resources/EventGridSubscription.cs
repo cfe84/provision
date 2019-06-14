@@ -57,6 +57,6 @@ namespace Provision
             EventGridSubscriptionName = $"${context.BaseNameVariable}-`random 5`";
         }
 
-        public int Order => 5;
+        public int Order {get; set;} = 5;
     }
 }

@@ -14,7 +14,7 @@ namespace Provision {
             get => StorageAccountVariableName + "_RESOURCE_ID";
         }
         public string SKU { get; set; } = "Standard_LRS";
-        private string accountPostfix = null;
+        private string accountPostfix = null;   
         public string AccountPostfix { 
             get => accountPostfix ?? Name.Substring(0, 3);
             set => accountPostfix = value; 
@@ -32,6 +32,6 @@ namespace Provision {
             this.Location = $"${context.LocationVariable}";
         }
 
-        public int Order => 2;
+        public int Order {get ;set ;} = 2;
     }
 }

@@ -28,6 +28,6 @@ namespace Provision {
             this.Location = $"${context.LocationVariable}";
         }
 
-        public int Order => 3;
+        public int Order {get;set;} = 3;
     }
 }
