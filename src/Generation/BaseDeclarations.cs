@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Provision {
-    static class BaseDeclarations {
+namespace Provision
+{
+    static class BaseDeclarations
+    {
         public static string Header(Context values, string envFileGenerator) =>
             $@"#!/bin/bash
 
@@ -39,7 +41,7 @@ done
 
 {envFileGenerator}
 
-source env.sh
+source $ENVFILE
 
 usage() {{
     echo ""Usage: `basename ""$0""` [--name $NAME] [--location ${values.LocationVariable}]""
@@ -50,7 +52,8 @@ usage() {{
 
 ";
 
-        public static string AssembleEnvFile(Context values) {
+        public static string AssembleEnvFile(Context values)
+        {
             return $@"
 ENVFILE=""env-$NAME.sh""
 if [ ! -f $ENVFILE ]; then
@@ -66,7 +69,7 @@ SUBSCRIPTION_RESOURCE_ID=\""$SUBSCRIPTION_RESOURCE_ID\""
 {values.TenantIdVariable}=`az  account show --query tenantId -o tsv`
 "" > $ENVFILE
 fi
-"; 
+";
         }
 
         public static string CleanupScript(string scripts) => $@"
