@@ -2,20 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Provision {
-    class GenerationException: FunctionalException {
-        public GenerationException(string message): base(message) {}
+namespace Provision
+{
+    class GenerationException : FunctionalException
+    {
+        public GenerationException(string message) : base(message) { }
     }
-    class Generate {
+    class Generate
+    {
         private Context context;
-        public Generate(Context context) {
+        public Generate(Context context)
+        {
             this.context = context;
         }
 
-        private IEnumerable<IResource> getOrderedResources() => 
+        private IEnumerable<IResource> getOrderedResources() =>
             this.context.Resources
                 .OrderBy(resource => resource.Order);
-        private List<IResourceGenerator> getGeneratorList(IEnumerable<IResource> resourceList) => 
+        private List<IResourceGenerator> getGeneratorList(IEnumerable<IResource> resourceList) =>
             resourceList
                 .Select(resource => Resolver.GetResourceGenerator(resource))
                 .ToList();
@@ -23,7 +27,8 @@ namespace Provision {
         public string CreateResourceListSummary(IEnumerable<IResource> resourceList) =>
             string.Join("\n", resourceList.Select(resource => $@"echo ""{resource.GetType().Name} ({resource.Name})"""));
 
-        public string BuildString() {
+        public string BuildString()
+        {
             var sortedList = getOrderedResources();
             var generators = getGeneratorList(sortedList);
             var introduction = BaseDeclarations.Introduction(CreateResourceListSummary(sortedList));
@@ -39,7 +44,11 @@ namespace Provision {
             var summaries = string.Join("\n", generators
                 .Select(generator => generator.GenerateSummary())
                 .Where(script => !String.IsNullOrWhiteSpace(script)));
+            var envScripts = string.Join("\n", generators
+                .Select(generator => generator.GenerateEnvScript())
+                .Where(script => !String.IsNullOrWhiteSpace(script)));
             var envFileGenerator = BaseDeclarations.AssembleEnvFile(context);
+            var envFileGeneratorAppend = BaseDeclarations.AssembleEnvFileAppending(declarations, envScripts);
             var result = BaseDeclarations.Header(this.context, envFileGenerator)
                 + "\n"
                 + introduction
@@ -47,6 +56,8 @@ namespace Provision {
                 + declarations
                 + "\n"
                 + provisioningScripts
+                + "\n"
+                + envFileGeneratorAppend
                 + "\n"
                 + BaseDeclarations.CleanupScript(cleanupScripts)
                 + "\n"

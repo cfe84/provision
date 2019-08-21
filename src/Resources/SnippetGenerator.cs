@@ -1,4 +1,5 @@
-namespace Provision {
+namespace Provision
+{
     class SnippetGenerator : IResourceGenerator
     {
         Snippet snippet;
@@ -8,5 +9,6 @@ namespace Provision {
         public string GenerateProvisioningScript() => snippet.Provisioning;
         public string GenerateResourceNameDeclaration() => snippet.Declaration;
         public string GenerateSummary() => snippet.Summary;
+        public string GenerateEnvScript() => snippet.Env;
     }
 }

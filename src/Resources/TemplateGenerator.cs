@@ -28,5 +28,7 @@ cat {template.TemplateFile} |
         public string GenerateResourceNameDeclaration() => "";
 
         public string GenerateSummary() => $"echo \"    File ({template.Name}): {template.OutputFile}\"";
+
+        public string GenerateEnvScript() => "";
     }
 }

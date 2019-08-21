@@ -2,31 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Provision {
+namespace Provision
+{
     internal class FunctionAppGenerator : IResourceGenerator
     {
         private FunctionApp functionApp;
-        public FunctionAppGenerator(FunctionApp functionApp) {
+        public FunctionAppGenerator(FunctionApp functionApp)
+        {
             this.functionApp = functionApp;
         }
 
-        public string GenerateCleanupScript() => 
+        public string GenerateCleanupScript() =>
             functionApp.IdentityScope != null ? $@"echo 'Removing function app identity ${functionApp.IdentityRolePrincipalIdVariable}'
 # az ad app delete --id ${functionApp.IdentityRolePrincipalIdVariable}"
             : "";
 
-        private string GenerateSettings() => 
+        private string GenerateSettings() =>
             functionApp.Settings != null ? $@"
 az functionapp config appsettings set --name ${functionApp.FunctionAppVariableName} -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} --settings {string.Join(" ", functionApp.Settings)} > /dev/null"
             : "";
         private string GenerateDeploy() =>
-            functionApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ? 
+            functionApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?
             $@"
 echo ""Deploying function app ${functionApp.FunctionAppVariableName}""
 func azure functionapp publish ${functionApp.FunctionAppVariableName}" : "";
 
         private string getPlanOptions() =>
-        functionApp.AppServicePlan == null 
+        functionApp.AppServicePlan == null
             ? $"--consumption-plan-location ${functionApp.Location}"
             : $"--plan ${functionApp.AppServicePlan.AppServicePlanAccountVariableName}";
 
@@ -41,11 +43,11 @@ az webapp auth update --ids ${functionApp.ResourceGroup.ResourceGroupResourceIdV
             functionApp.IdentityScope != null ?
             $@"
 echo ""Configuring identity for functionapp ${functionApp.FunctionAppVariableName} with {functionApp.IdentityRole} access to scope {functionApp.IdentityScope}.""
-{functionApp.IdentityRolePrincipalIdVariable}=`az functionapp identity assign --name ${functionApp.FunctionAppVariableName} --resource-group ${functionApp.ResourceGroup.ResourceGroupNameVariable} --role {functionApp.IdentityRole} --scope ""{functionApp.IdentityScope}"" --query principalId -o tsv`" 
+{functionApp.IdentityRolePrincipalIdVariable}=`az functionapp identity assign --name ${functionApp.FunctionAppVariableName} --resource-group ${functionApp.ResourceGroup.ResourceGroupNameVariable} --role {functionApp.IdentityRole} --scope ""{functionApp.IdentityScope}"" --query principalId -o tsv`"
             : "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating functionapp ${functionApp.FunctionAppVariableName}""
-az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} {getPlanOptions()} --name ${functionApp.FunctionAppVariableName} --storage-account ${functionApp.StorageAccount.StorageAccountVariableName} --query ""state"" -o tsv" 
+az functionapp create -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} {getPlanOptions()} --name ${functionApp.FunctionAppVariableName} --storage-account ${functionApp.StorageAccount.StorageAccountVariableName} --query ""state"" -o tsv"
 + GenerateSettings()
 + GenerateEasyAuth()
 + GenerateIdentity()
@@ -64,6 +66,6 @@ echo ""  Function id principal: ${functionApp.IdentityRolePrincipalIdVariable}""
 echo ""           Function URL: ${functionApp.HostNameVariable}"""
             + FunctionAppSummaryPrincipal();
 
-
+        public string GenerateEnvScript() => "";
     }
 }

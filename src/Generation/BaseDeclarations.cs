@@ -48,9 +48,18 @@ usage() {{
     exit 1
 }}
 
-
-
 ";
+
+        private static string escapeForEnvFileGenerator(string stringToEscape) =>
+            stringToEscape.Replace("\"", "\\\"");
+
+        public static string AssembleEnvFileAppending(string declarations, string envScripts) => $@"
+echo ""
+
+{escapeForEnvFileGenerator(declarations)}
+
+{escapeForEnvFileGenerator(envScripts)}
+"" >> $ENVFILE";
 
         public static string AssembleEnvFile(Context values)
         {
@@ -67,6 +76,7 @@ STORAGEBASENAME=\""`echo -n $NAME | head -c 15`$RANDOMBASE\""
 {values.SubscriptionIdVariable}=\""${values.SubscriptionIdVariable}\""
 SUBSCRIPTION_RESOURCE_ID=\""$SUBSCRIPTION_RESOURCE_ID\""
 {values.TenantIdVariable}=`az  account show --query tenantId -o tsv`
+
 "" > $ENVFILE
 fi
 ";

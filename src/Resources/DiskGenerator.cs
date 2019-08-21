@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Provision {
+namespace Provision
+{
     internal class DiskGenerator : IResourceGenerator
     {
         private Disk disk;
-        public DiskGenerator(Disk disk) {
+        public DiskGenerator(Disk disk)
+        {
             this.disk = disk;
         }
 
         public string GenerateCleanupScript() => "";
+
+        public string GenerateEnvScript() => "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating disk ${disk.DiskVariableName}""
 az disk create --resource-group ${disk.ResourceGroup.ResourceGroupNameVariable} --name ${disk.DiskVariableName} --location {disk.Location} --sku {disk.SKU} --size-gb {disk.SizeGb} --os-type {disk.OsType} --query ""provisioningState"" -o tsv";

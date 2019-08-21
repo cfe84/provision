@@ -1,4 +1,5 @@
-namespace Provision {
+namespace Provision
+{
     internal class DeploymentGenerator : IResourceGenerator
     {
         private Deployment deployment;
@@ -9,14 +10,14 @@ namespace Provision {
         public string GenerateCleanupScript() => "";
 
         private string generateUri() => deployment.Uri != null
-            ? $" --template-uri {deployment.Uri} " 
+            ? $" --template-uri {deployment.Uri} "
             : "";
 
         private string generateFile() => deployment.File != null
-            ? $" --template-file {deployment.File} " 
+            ? $" --template-file {deployment.File} "
             : "";
 
-        private string generateParameters() => deployment.Parameters.Length > 0 
+        private string generateParameters() => deployment.Parameters.Length > 0
             ? $" --parameters {string.Join(" ", deployment.Parameters)} "
             : "";
 
@@ -26,5 +27,7 @@ az group deployment create -g ""${deployment.ResourceGroup.ResourceGroupNameVari
         public string GenerateResourceNameDeclaration() => "";
 
         public string GenerateSummary() => "";
+
+        public string GenerateEnvScript() => "";
     }
 }

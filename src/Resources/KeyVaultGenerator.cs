@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Provision {
+namespace Provision
+{
     internal class KeyVaultGenerator : IResourceGenerator
     {
         private KeyVault keyVault;
-        public KeyVaultGenerator(KeyVault keyVault) {
+        public KeyVaultGenerator(KeyVault keyVault)
+        {
             this.keyVault = keyVault;
         }
 
         public string GenerateCleanupScript() => "";
 
-        private string GenerateRoleAssignment() => 
+        private string GenerateRoleAssignment() =>
             keyVault.ServicePrincipal == null ? "" : $@"
 echo ""Granting permission""
 az keyvault set-policy --name ${keyVault.KeyVaultVariableName} --key-permissions create wrapKey unwrapKey get -g ${keyVault.ResourceGroup.ResourceGroupNameVariable} --spn ""${keyVault.ServicePrincipal.ApplicationIdentifierUriVariable}"" --query ""properties.provisioningState""";
@@ -22,6 +24,6 @@ az keyvault create --name ${keyVault.KeyVaultVariableName} -g ${keyVault.Resourc
 
         public string GenerateSummary() => $@"echo ""              Vault url: https://${keyVault.KeyVaultVariableName}.vault.azure.net/""";
 
-
+        public string GenerateEnvScript() => "";
     }
 }

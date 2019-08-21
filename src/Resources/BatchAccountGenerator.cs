@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Provision {
+namespace Provision
+{
     internal class BatchAccountGenerator : IResourceGenerator
     {
         private BatchAccount batchAccount;
@@ -11,6 +12,7 @@ namespace Provision {
         }
 
         public string GenerateCleanupScript() => "";
+
         public string GenerateProvisioningScript() => $@"echo ""Creating batch account ${batchAccount.BatchAccountNameVariable}""
 BATCH_ACCOUNT_ENDPOINT=`az batch account create -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} --name ${batchAccount.BatchAccountNameVariable} --location {batchAccount.Location} --storage-account ${batchAccount.StorageAccount.StorageAccountVariableName} --query accountEndpoint -o tsv`
 BATCH_ACCOUNT_KEY=`az batch account keys list -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} --name ${batchAccount.BatchAccountNameVariable} --query primary -o tsv`
@@ -54,14 +56,14 @@ rm pool.json" + CreateApplication();
 
         private string ZipFileName() => batchAccount.ApplicationZip ?? "package.zip";
 
-        private string CreateZip() => batchAccount.ApplicationFolder != null ? 
+        private string CreateZip() => batchAccount.ApplicationFolder != null ?
             $@"
 cd {batchAccount.ApplicationFolder} && zip -ll package.zip * && cd .. && mv {batchAccount.ApplicationFolder}/package.zip {ZipFileName()}" : "";
 
         private string CreateApplication() => HasApplication() ?
             $@"
 echo ""Creating application ${batchAccount.BatchApplicationNameVariable}""
-az batch application create -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} -n ${batchAccount.BatchAccountNameVariable} --application-name ${batchAccount.BatchApplicationNameVariable} --query ""name"" -o tsv" + 
+az batch application create -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} -n ${batchAccount.BatchAccountNameVariable} --application-name ${batchAccount.BatchApplicationNameVariable} --query ""name"" -o tsv" +
 CreateZip() + $@"
 az batch application package create -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} -n ${batchAccount.BatchAccountNameVariable} --application-name ${batchAccount.BatchApplicationNameVariable} --version-name ${batchAccount.BatchApplicationVersionVariable} --package-file {ZipFileName()} --query state -o tsv" : "";
         private string AddApplicationDeclaration() => HasApplication() ?
@@ -69,12 +71,15 @@ az batch application package create -g ${batchAccount.ResourceGroup.ResourceGrou
 {batchAccount.BatchApplicationNameVariable}=""{batchAccount.ApplicationName}""
 {batchAccount.BatchApplicationVersionVariable}=""{batchAccount.ApplicationVersion}""" : "";
 
-        private bool HasApplication() => 
+        private bool HasApplication() =>
             batchAccount.ApplicationZip != null || batchAccount.ApplicationFolder != null;
 
         public string GenerateResourceNameDeclaration() => $@"{batchAccount.BatchAccountNameVariable}=""{batchAccount.BatchAccountName}""
 {batchAccount.BatchPoolNameVariable}=""{batchAccount.BatchPoolName}""" + AddApplicationDeclaration();
         public string GenerateSummary() => $@"echo ""          Batch account: ${batchAccount.BatchAccountNameVariable}""
 echo ""      Batch account key: ${batchAccount.BatchAccountKeyVariable}""";
+
+        public string GenerateEnvScript() => $@"BATCH_ACCOUNT_ENDPOINT=`az batch account show -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} --name ${batchAccount.BatchAccountNameVariable} --query accountEndpoint -o tsv
+BATCH_ACCOUNT_KEY=`az batch account keys list -g ${batchAccount.ResourceGroup.ResourceGroupNameVariable} --name ${batchAccount.BatchAccountNameVariable} --query primary -o tsv`";
     }
 }
