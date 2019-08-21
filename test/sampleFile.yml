@@ -4,7 +4,7 @@ deployment:
   - type: "resourceGroup"
     name: "defaultrg"
     value: "$NAME"
-  - type: "storageAccount"
+  - type: "storage-account"
     resourceGroup: "defaultrg"
     containers:
     - "testData"
