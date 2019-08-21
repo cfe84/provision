@@ -16,7 +16,7 @@ RANDOMBASE16CHAR=""`random 16`""
 {values.SubscriptionIdVariable}=""`az account show --query id -o tsv`""
 SUBSCRIPTION_RESOURCE_ID=""/subscriptions/${values.SubscriptionIdVariable}""
 NAME=""`basename ""$PWD""`""
-{values.LocationVariable}=""westus2""
+{values.LocationVariable}=""{values.DefaultLocation}""
 
 while [[ $# -gt 0 ]]
 do
