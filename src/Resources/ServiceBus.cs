@@ -8,8 +8,8 @@ namespace Provision
         public string Location { get; set; }
         public string Name { get; set; } = "default";
         public string SKU { get; set; } = "Basic";
-        [Dependency(Optional = true, Description = "If SKU is Premium, number of scale units")]
-        public string ScaleUnits { get; set; } = "1";
+        [Dependency(Optional = true, Description = "If SKU is Premium, capacity")]
+        public string Capacity { get; set; } = "1";
         public string ServiceBusVariable { get; set; }
         public string ServiceBusName { get; set; }
         public string ConnectionStringVariable { get => ServiceBusVariable + "_CONNECTION_STRING"; }

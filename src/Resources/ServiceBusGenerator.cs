@@ -34,11 +34,16 @@ az servicebus queue create -g ""${serviceBus.ResourceGroup.ResourceGroupNameVari
 az servicebus topic subscription create -g ""${serviceBus.ResourceGroup.ResourceGroupNameVariable}"" --name ""{subscription}"" --namespace-name ${serviceBus.ServiceBusVariable} --topic-name {serviceBus.Topics[0]} --query ""created"" -o tsv")))
             : "";
 
-        public string GenerateProvisioningScript() => $@"echo ""Creating service bus namespace ${serviceBus.ServiceBusVariable}""
-az servicebus namespace create --name ${serviceBus.ServiceBusVariable} --sku {serviceBus.SKU} --location {serviceBus.Location} -g ${serviceBus.ResourceGroup.ResourceGroupNameVariable} --query ""provisioningState"" -o tsv
+        public string GenerateProvisioningScript()
+        {
+            var capacity = string.IsNullOrEmpty(serviceBus.Capacity) ? "" : "--capacity " + serviceBus.Capacity;
+            return $@"echo ""Creating service bus namespace ${serviceBus.ServiceBusVariable}""
+az servicebus namespace create --name ${serviceBus.ServiceBusVariable} --sku {serviceBus.SKU} {capacity} --location {serviceBus.Location} -g ${serviceBus.ResourceGroup.ResourceGroupNameVariable} --query ""provisioningState"" -o tsv
 {serviceBus.KeyNameVariable}=""RootManageSharedAccessKey""
 IFS=$'\t' read -r {serviceBus.ConnectionStringVariable} {serviceBus.KeyVariable} <<< `az servicebus namespace authorization-rule keys list -g ""${serviceBus.ResourceGroup.ResourceGroupNameVariable}"" --namespace-name ""${serviceBus.ServiceBusVariable}"" -n ""${serviceBus.KeyNameVariable}"" -o tsv --query ""{{connectionString: primaryConnectionString, primaryKey: primaryKey}}""`"
             + GenerateTopics() + GenerateQueues() + GenerateSubscriptions();
+        }
+
         public string GenerateResourceNameDeclaration() => $@"{serviceBus.ServiceBusVariable}=""{serviceBus.ServiceBusName}""";
 
         public string GenerateSummary() => $@"echo ""  Service bus   ({serviceBus.Name}): ${serviceBus.ServiceBusVariable}""
