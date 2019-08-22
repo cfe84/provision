@@ -51,7 +51,7 @@ usage() {{
 ";
 
         private static string escapeForEnvFileGenerator(string stringToEscape) =>
-            stringToEscape.Replace("\"", "\\\"");
+            stringToEscape.Replace("\"", "\\\"").Replace("`", "\\`").Replace("$(", "\\$(");
 
         public static string AssembleEnvFileAppending(string declarations, string envScripts) => $@"
 echo ""
