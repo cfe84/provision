@@ -50,6 +50,6 @@ az storage account create --name ${storageAccount.StorageAccountVariableName} --
         public string GenerateSummary() => $@"echo ""  Storage account ({storageAccount.AccountPostfix}): ${storageAccount.StorageAccountVariableName}""
 echo ""      Storage key ({storageAccount.AccountPostfix}): ${storageAccount.ConnectionStringVariableName}""";
 
-        public string GenerateEnvScript() => $@"{storageAccount.ConnectionStringVariableName}=`az storage account show-connection-string -g ${storageAccount.ResourceGroup.ResourceGroupNameVariable} -n ${storageAccount.StorageAccountVariableName} --query connectionString -o tsv`""";
+        public string GenerateEnvScript() => $@"{storageAccount.ConnectionStringVariableName}=""`az storage account show-connection-string -g ${storageAccount.ResourceGroup.ResourceGroupNameVariable} -n ${storageAccount.StorageAccountVariableName} --query connectionString -o tsv`""";
     }
 }
