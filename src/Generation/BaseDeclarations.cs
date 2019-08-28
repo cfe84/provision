@@ -10,6 +10,10 @@ namespace Provision
 
 PWD=`pwd`
 random() {{ size=$1; echo -n `date +%s%N | sha256sum | base64 | head -c $size`;}}
+shorten() {{ size=""$1""; input=""$2""; echo ""$input"" | head -c ""$size""; }}
+strip() {{ character=""$1""; input=""$2""; echo ""$input"" | sed ""s/[$character]//g""; }}
+lower() {{ input=""$1""; echo ""$input"" | sed -e 's/\(.*\)/\L\1/'; }}
+upper() {{ input=""$1""; echo ""$input"" | sed -e 's/\(.*\)/\U\1/'; }}
 
 RANDOMBASE=""`random 5`""
 RANDOMBASE16CHAR=""`random 16`""
