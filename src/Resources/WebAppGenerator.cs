@@ -14,25 +14,25 @@ namespace Provision
 
         public string GenerateCleanupScript() => "";
         private string GenerateSettings() =>
-            webApp.Settings != null ? $@"az webapp config appsettings set --name ${webApp.WebAppVariableName} -g ${webApp.ResourceGroup.ResourceGroupNameVariable} --settings {string.Join(" ", webApp.Settings)} > /dev/null
-"
+            webApp.Settings != null ? $@"
+az webapp config appsettings set --name ${webApp.WebAppVariableName} -g ${webApp.ResourceGroup.ResourceGroupNameVariable} --settings {string.Join(" ", webApp.Settings)} > /dev/null"
             : "";
         private string GenerateDeploy() =>
             webApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?
-            $@"echo ""Deploying webapp""
+            $@"
+echo ""Deploying webapp""
 git remote add azure ""${webApp.GitUrlVariable}""
-git push azure master
-""" : "";
+git push azure master" : "";
 
         private string GenerateEasyAuth() =>
             webApp.AppRegistration != null ?
-            $@"az webapp auth update --ids ${webApp.ResourceGroup.ResourceGroupResourceIdVariable}/providers/Microsoft.Web/sites/${webApp.WebAppVariableName} --action LoginWithAzureActiveDirectory --enabled true --aad-client-id ${webApp.AppRegistration.ApplicationIdVariable} --aad-client-secret ""${webApp.AppRegistration.PasswordVariable}"" --aad-token-issuer-url https://login.microsoftonline.com/{webApp.TenantId}/ > /dev/null"
+            $@"
+az webapp auth update --ids ${webApp.ResourceGroup.ResourceGroupResourceIdVariable}/providers/Microsoft.Web/sites/${webApp.WebAppVariableName} --action LoginWithAzureActiveDirectory --enabled true --aad-client-id ${webApp.AppRegistration.ApplicationIdVariable} --aad-client-secret ""${webApp.AppRegistration.PasswordVariable}"" --aad-token-issuer-url https://login.microsoftonline.com/{webApp.TenantId}/ > /dev/null"
             : "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating webapp ${webApp.WebAppVariableName}""
 {webApp.HostNameVariable}=`az webapp create -g ${webApp.ResourceGroup.ResourceGroupNameVariable} -n ${webApp.WebAppVariableName} --plan ${webApp.AppServicePlan.AppServicePlanAccountVariableName} --deployment-local-git --query ""defaultHostName"" -o tsv`
-{webApp.GitUrlVariable}=""https://$DEPLOYMENTUSERNAME:$DEPLOYMENTPASSWORD@${webApp.WebAppVariableName}.scm.azurewebsites.net/${webApp.WebAppVariableName}.git""
-"
+{webApp.GitUrlVariable}=""https://$DEPLOYMENTUSERNAME:$DEPLOYMENTPASSWORD@${webApp.WebAppVariableName}.scm.azurewebsites.net/${webApp.WebAppVariableName}.git"""
 + GenerateSettings()
 + GenerateDeploy()
 + GenerateEasyAuth();
