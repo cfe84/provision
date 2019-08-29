@@ -14,6 +14,7 @@ shorten() {{ size=""$1""; input=""$2""; echo ""$input"" | head -c ""$size""; }}
 strip() {{ character=""$1""; input=""$2""; echo ""$input"" | sed ""s/[$character]//g""; }}
 lower() {{ input=""$1""; echo ""$input"" | sed -e 's/\(.*\)/\L\1/'; }}
 upper() {{ input=""$1""; echo ""$input"" | sed -e 's/\(.*\)/\U\1/'; }}
+escape() {{ input=""$1""; echo ""$input"" | sed -e 's/\//\\\//g'; }}
 
 RANDOMBASE=""`random 5`""
 RANDOMBASE16CHAR=""`random 16`""
