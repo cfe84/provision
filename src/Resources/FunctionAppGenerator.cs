@@ -21,11 +21,23 @@ namespace Provision
             functionApp.Settings != null ? $@"
 az functionapp config appsettings set --name ${functionApp.FunctionAppVariableName} -g ${functionApp.ResourceGroup.ResourceGroupNameVariable} --settings {string.Join(" ", functionApp.Settings)} > /dev/null"
             : "";
+
+        private string CwdForDeployment() =>
+            functionApp.DeployPath != null ? $@"
+cd ""{functionApp.DeployPath}"""
+: "";
+
+        private string PwdForDeployment() =>
+            functionApp.DeployPath != null ? $@"
+cd $PWD"
+: "";
+
         private string GenerateDeploy() =>
             functionApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?
             $@"
-echo ""Deploying function app ${functionApp.FunctionAppVariableName}""
-func azure functionapp publish ${functionApp.FunctionAppVariableName}" : "";
+echo ""Deploying function app ${functionApp.FunctionAppVariableName}""" + CwdForDeployment() + $@"
+func azure functionapp publish ${functionApp.FunctionAppVariableName}" + PwdForDeployment()
+: "";
 
         private string getPlanOptions() =>
         functionApp.AppServicePlan == null

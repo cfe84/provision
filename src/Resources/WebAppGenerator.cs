@@ -20,9 +20,9 @@ az webapp config appsettings set --name ${webApp.WebAppVariableName} -g ${webApp
         private string GenerateDeploy() =>
             webApp.Deploy.Equals("true", StringComparison.InvariantCultureIgnoreCase) ?
             $@"
-echo ""Deploying webapp""
-git remote add azure ""${webApp.GitUrlVariable}""
-git push azure master" : "";
+echo ""Deploying webapp (adding remote ${webApp.WebAppVariableName})""
+git remote add ""${webApp.WebAppVariableName}"" ""${webApp.GitUrlVariable}""
+git push ""${webApp.WebAppVariableName}"" master" : "";
 
         private string GenerateEasyAuth() =>
             webApp.AppRegistration != null ?

@@ -11,13 +11,15 @@ namespace Provision
     class Program
     {
         const int PROPERTY_DESCRIPTION_ALIGNMENT_LEFT = 45;
-        static string FormatProperty(Resolver.ResourceProperty property) {
+        static string FormatProperty(Resolver.ResourceProperty property)
+        {
             var regex = new Regex("([A-Z]+[a-z]*)");
             var formattedName = string.Join("", regex.Matches(property.Name).Select(nameComponent => (nameComponent.Index == 0 ? "--" : "-") + nameComponent.Value.ToLower()));
             var nameAndParameterType = formattedName + " (" + property.Type + ")";
             var leftSpaces = "        ";
             var spacesBetweenNameAndDescription = "";
-            for (int i = 0; i < PROPERTY_DESCRIPTION_ALIGNMENT_LEFT - nameAndParameterType.Length; i++) {
+            for (int i = 0; i < PROPERTY_DESCRIPTION_ALIGNMENT_LEFT - nameAndParameterType.Length; i++)
+            {
                 spacesBetweenNameAndDescription += " ";
             }
             return leftSpaces + nameAndParameterType + spacesBetweenNameAndDescription + " " + property.Description;
@@ -26,9 +28,10 @@ namespace Provision
         static string FormatType(Resolver.KnownResourceType type) =>
             type.Type.Name + (type.Description != null ? ": " + type.Description : "");
 
-        static void Usage(string name) {
+        static void Usage(string name)
+        {
             var types = Resolver.KnownResourceTypes;
-            var usage = string.Join("\n", types.Select(type => 
+            var usage = string.Join("\n", types.Select(type =>
                 FormatType(type) + "\n" +
                 string.Join("\n", type.Properties.Select(FormatProperty))
             ));
@@ -37,17 +40,21 @@ namespace Provision
 
         static void Main(string[] args)
         {
-            try {
+            try
+            {
                 ResourceTree tree;
-                if (args.Length == 0 || args[0] == "-h") {
+                if (args.Length == 0 || args[0] == "-h")
+                {
                     Usage(System.AppDomain.CurrentDomain.FriendlyName);
                     return;
-                } 
-                else if (args[0] == "-f") {
+                }
+                else if (args[0] == "-f")
+                {
                     var file = args[1];
                     tree = YamlLexer.LoadResourcesFromFile(file);
                 }
-                else {
+                else
+                {
                     tree = CommandLineLexer.LexCommandLine(args);
                 }
                 var context = Parser.Parse(tree);
@@ -56,15 +63,19 @@ namespace Provision
                 var generate = new Generate(context);
                 Console.WriteLine(generate.BuildString());
             }
-            catch (Exception exception) {
-                if (exception.GetType().IsSubclassOf(typeof(FunctionalException))) {
+            catch (Exception exception)
+            {
+                if (exception.GetType().IsSubclassOf(typeof(FunctionalException)))
+                {
                     Console.Error.WriteLine($"{exception.GetType().Name}: {exception.Message}");
-                } 
-                else if (exception.InnerException != null && exception.InnerException.GetType().IsSubclassOf(typeof(FunctionalException))) {
+                }
+                else if (exception.InnerException != null && exception.InnerException.GetType().IsSubclassOf(typeof(FunctionalException)))
+                {
                     Console.Error.WriteLine($"{exception.InnerException.GetType().Name}: {exception.InnerException.Message}");
                 }
-                else {
-                    throw exception;
+                else
+                {
+                    Console.Error.WriteLine($"{exception.ToString()}");
                 }
             }
         }
