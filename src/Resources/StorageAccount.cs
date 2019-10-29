@@ -26,6 +26,7 @@ namespace Provision
         }
         public string ConnectionStringVariableName { get => StorageAccountVariableName + "_CONNECTION_STRING"; }
         public ResourceGroup ResourceGroup { get; set; }
+        public string Kind { get; set; } = "StorageV2";
         public string[] Containers { get; set; } = new string[0];
         public string[] Queues { get; set; } = new string[0];
         public string[] Tables { get; set; } = new string[0];

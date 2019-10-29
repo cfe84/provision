@@ -41,7 +41,7 @@ az storage cors add --account-name ${storageAccount.StorageAccountVariableName} 
             : "";
 
         public string GenerateProvisioningScript() => $@"echo ""Creating storage account ${storageAccount.StorageAccountVariableName}""
-az storage account create --name ${storageAccount.StorageAccountVariableName} --kind StorageV2 --sku {storageAccount.SKU} --location {storageAccount.Location} -g ${storageAccount.ResourceGroup.ResourceGroupNameVariable} --https-only true --query ""provisioningState"" -o tsv
+az storage account create --name ${storageAccount.StorageAccountVariableName} --kind {storageAccount.Kind} --sku {storageAccount.SKU} --location {storageAccount.Location} -g ${storageAccount.ResourceGroup.ResourceGroupNameVariable} --https-only true --query ""provisioningState"" -o tsv
 {storageAccount.ConnectionStringVariableName}=`az storage account show-connection-string -g ${storageAccount.ResourceGroup.ResourceGroupNameVariable} -n ${storageAccount.StorageAccountVariableName} --query connectionString -o tsv`"
             + GenerateContainers() + GenerateQueues() + GenerateTables() + GenerateCors();
         public string GenerateResourceNameDeclaration() => $@"{storageAccount.StorageAccountVariableName}=""`echo ""$STORAGEBASENAME"" | sed -e 's/-//g' | sed -E 's/^(.*)$/\L\1/g' | head -c 20`{storageAccount.AccountPostfix}""

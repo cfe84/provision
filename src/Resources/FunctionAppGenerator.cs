@@ -29,7 +29,7 @@ cd ""{functionApp.DeployPath}"""
 
         private string PwdForDeployment() =>
             functionApp.DeployPath != null ? $@"
-cd $PWD"
+cd -"
 : "";
 
         private string GenerateDeploy() =>
